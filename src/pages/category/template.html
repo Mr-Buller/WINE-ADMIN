@@ -24,8 +24,6 @@
                     headerStyle="width:50px;text-align:center" 
                     bodyStyle="text-align:center"></Column>
                 <Column field="name" header="Name"></Column>
-                <Column field="status" header="Status" 
-                    headerStyle="width: 100px;"></Column>
                 <Column header="Action" headerStyle="width: 200px;text-align:center" bodyStyle="text-align:center">
                     <template #body="slotProps">
                         <span @click="openUpdateCategoryDialog(slotProps.index)" class="stage-badge status-waiting">Edit</span>
