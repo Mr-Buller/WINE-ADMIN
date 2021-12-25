@@ -1,0 +1,69 @@
+.p-toast.p-toast-topright {
+    z-index: 1000;
+    top: 70px;
+}
+.no-bg {
+	background-color: white !important;
+	border: none !important;
+}
+.table-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+.p-paginator .p-paginator-pages .p-paginator-page {
+    min-width: 2rem !important;
+    height: 2rem !important;
+}
+.p-checkbox, .p-checkbox-box {
+    width: 18px !important;
+    height: 18px !important;
+}
+.p-inputtext, .p-button{
+    padding: 0.25rem 0.5rem !important;
+}
+.p-input-icon-left > .p-inputtext {
+    padding-left: 2rem !important;
+}
+.p-input-icon-right > .p-inputtext {
+    padding-right: 2rem !important;
+}
+.stage-badge {
+    border-radius: 2px;
+    padding: 0.25em 0.5rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: .3px;
+}
+.stage-badge.status-draft {
+    background: #feedaf;
+    color: #8a5340;
+}
+.stage-badge.status-complete {
+    background: #c8e6c9;
+    color: #256029;
+}
+.stage-badge.status-cancel {
+    background: #ffcdd2;
+    color: #c63737;
+}
+.stage-badge.status-waiting {
+    background: #cce5ff;
+    color: #004085;
+}
+.p-button-label {
+    font-weight: 600;
+}
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 600 !important;
+}
+.p-datatable.p-datatable-sm .p-datatable-thead > tr > th {
+    padding: 0.5rem 1rem !important;
+}
+.p-datatable.p-datatable-sm .p-datatable-tbody > tr > td {
+    padding: 0.5rem 1rem !important;
+}
+.p-datatable.p-datatable-sm .p-datatable-header {
+    padding: 1rem 1rem !important;
+}

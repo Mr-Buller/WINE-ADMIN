@@ -1,0 +1,80 @@
+<div class="p-grid crud-demo">
+    <div class="p-col-12">
+        <div class="card p-p-0">
+            <Toast />
+            <Toolbar class="no-bg">
+                <template slot="right">
+                    <Button label="New" icon="pi pi-plus" class="p-button-success p-mr-2" @click="openCreateDialog" />
+                </template>
+            </Toolbar>
+
+            <DataTable :value="data.categories" dataKey="id" class="p-datatable-sm">
+                <ProgressBar v-if="isFetching" mode="indeterminate" style="height: .2rem;"></ProgressBar>
+                <template #header>
+                    <div class="table-header">
+                        <h5 class="p-m-0">Brand</h5>
+                        <span class="p-input-icon-left">
+                            <i class="pi pi-search" />
+                            <InputText @keyup.enter="searchBrand" v-model="keySearch" placeholder="Search" />
+                        </span>
+                    </div>
+                </template>
+
+                <Column header="ID" field="id" 
+                    headerStyle="width: 100px;text-align:center" 
+                    bodyStyle="text-align:center"></Column>
+                <Column header="Image" headerStyle="width:100px">
+                    <template #body="slotProps">
+                        <img :src="getFullPathImage(slotProps.data.logo)" style="width: 36px;height: 36px;object-fit: cover;" />
+                    </template>
+                </Column>
+                <Column field="name" header="Name" 
+                    style="text-align: center;"></Column>
+                <Column header="Action" headerStyle="width: 200px;text-align:center" bodyStyle="text-align:center">
+                    <template #body="slotProps">
+                        <span @click="openUpdateDialog(slotProps.index)" class="stage-badge status-waiting">Edit</span>
+                    </template>
+                </Column>
+            </DataTable>
+            <Paginator v-if="!isFetching && data.categories.length > 0" :rows="pagination.size" :totalRecords="pagination.length" @page="onPage($event)"></Paginator>
+
+            <!-- Dialog of Create Brand -->
+            <Dialog :visible.sync="showCreateDialog" :style="{width: '450px'}" header="Create Brand" :modal="true"
+                class="p-fluid">
+                <div class="p-field">
+                    <label for="choose-image" class="pointer">
+                        <img :src="brand.imageFile ? fileToPath(brand.imageFile) : require('@/assets/logo.png')" class="product-image" />
+                    </label>
+                    <input @change="chooseImage($event)" hidden id="choose-image" type="file" accept="image/*" />
+                </div>
+                <div class="p-field">
+                    <label for="name">Name</label>
+                    <InputText id="name" v-model.trim="brand.name" required="true" autofocus/>
+                </div>
+                <template #footer>
+                    <Button v-if="isCreating" label="Loading.." icon="pi pi-loading" class="p-button-text" />
+                    <Button v-else @click="validateBeforeCreate" label="Save" icon="pi pi-check" class="p-button-text" />
+                </template>
+            </Dialog>
+
+            <!-- Dialog of Update Brand -->
+            <Dialog :visible.sync="showUpdateDialog" :style="{width: '450px'}" header="Update Brand" :modal="true"
+                class="p-fluid">
+                <div class="p-field">
+                    <label for="choose-update-image" class="pointer">
+                        <img :src="brand.imageFile ? fileToPath(brand.imageFile) : brand.image ? getFullPathImage(brand.image) : require('@/assets/logo.png')" class="product-image" />
+                    </label>
+                    <input @change="chooseImage($event)" hidden id="choose-update-image" type="file" accept="image/*" />
+                </div>
+                <div class="p-field">
+                    <label for="name">Name</label>
+                    <InputText id="name" v-model.trim="brand.name" required="true" autofocus/>
+                </div>
+                <template #footer>
+                    <Button v-if="isUpdating" label="Loading.." icon="pi pi-loading" class="p-button-text" />
+                    <Button v-else @click="validateBeforeUpdate" label="Save" icon="pi pi-check" class="p-button-text" />
+                </template>
+            </Dialog>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,17 @@
+<div class="login-container">
+    <div class="card">
+        <h5>Login</h5>
+        <div class="p-field p-fluid">
+            <label for="username">Username</label>
+            <InputText v-model="body.username" type="text" id="username" />
+        </div>
+        <div class="p-field p-fluid">
+            <label for="password">Password</label>
+            <InputText v-model="body.password" type="password" id="password" />
+        </div>
+        <div class="p-field p-fluid">
+            <Button v-if="!isLoading" @click="onLogin" label="Submit"></Button>
+            <Button v-else label="Loading..."></Button>
+        </div>
+    </div>
+</div>

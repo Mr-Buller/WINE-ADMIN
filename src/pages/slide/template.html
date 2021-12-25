@@ -1,0 +1,102 @@
+<div class="p-grid crud-demo">
+    <div class="p-col-12">
+        <div class="card p-p-0">
+            <Toast />
+            <Toolbar class="no-bg">
+                <template slot="right">
+                    <Button label="New" icon="pi pi-plus" class="p-button-success p-mr-2" @click="openCreateDialog" />
+                </template>
+            </Toolbar>
+
+            <DataTable :value="data.slides" dataKey="id" class="p-datatable-sm">
+                <ProgressBar v-if="isFetching" mode="indeterminate" style="height: .2rem;"></ProgressBar>
+                <template #header>
+                    <div class="table-header">
+                        <h5 class="p-m-0">Slide</h5>
+                    </div>
+                </template>
+
+                <Column header="ID" field="id" 
+                    headerStyle="width: 50px;text-align:center" 
+                    bodyStyle="text-align:center"></Column>
+                <Column header="Image">
+                    <template #body="slotProps">
+                        <img :src="getFullPathImage(slotProps.data.image)" style="width: 36px;height: 36px;object-fit: cover;" />
+                    </template>
+                </Column>
+                <Column field="ordering" header="Ordering" headerStyle="width:100px;text-align:center" bodyStyle="text-align:center"></Column>
+                <Column field="status" header="Status" headerStyle="width:100px;text-align:center" bodyStyle="text-align:center"></Column>
+                <Column header="Action" headerStyle="width: 100px;text-align:center" bodyStyle="text-align:center">
+                    <template #body="slotProps">
+                        <span @click="openUpdateDialog(slotProps.index)" class="stage-badge status-waiting">Edit</span>
+                    </template>
+                </Column>
+            </DataTable>
+            <Paginator v-if="!isFetching && data.slides.length > 0" :rows="pagination.size" :totalRecords="pagination.length" @page="onPage($event)"></Paginator>
+
+            <!-- Dialog of Create Slide -->
+            <Dialog :visible.sync="showCreateDialog" :style="{width: '450px'}" header="Create Slide" :modal="true"
+                class="p-fluid">
+                <div class="p-field">
+                    <label for="choose-image" class="pointer">
+                        <img :src="slide.imageFile ? fileToPath(slide.imageFile) : require('@/assets/logo.png')" class="product-image" />
+                    </label>
+                    <input @change="chooseImage($event)" hidden id="choose-image" type="file" accept="image/*" />
+                </div>
+                <div class="p-field">
+                    <label for="url">Action URL</label>
+                    <InputText id="url" v-model.trim="slide.url" required="true" autofocus/>
+                </div>
+                <div class="p-field pt-2">
+                    <label>Status</label>
+                    <Dropdown v-model="slide.status" 
+                        :options="slideStatus"
+                        optionValue="value" 
+                        optionLabel="name" 
+                        placeholder="Select a status">
+				    </Dropdown>
+                </div>
+                <div class="p-field">
+                    <label >Ordering</label>
+                    <InputNumber v-model.trim="slide.ordering" required="true" autofocus/>
+                </div>
+                <template #footer>
+                    <Button v-if="isCreating" label="Loading.." icon="pi pi-loading" class="p-button-text" />
+                    <Button v-else @click="validateBeforeCreate" label="Save" icon="pi pi-check" class="p-button-text" />
+                </template>
+            </Dialog>
+
+            <!-- Dialog of Update Slide -->
+            <Dialog :visible.sync="showUpdateDialog" :style="{width: '450px'}" header="Update Slide" :modal="true"
+                class="p-fluid">
+                <div class="p-field">
+                    <label for="choose-image" class="pointer">
+                        <img :src="slide.imageFile ? fileToPath(slide.imageFile) : slide.image ? getFullPathImage(slide.image) : require('@/assets/logo.png')" class="product-image" />
+                    </label>
+                    <input @change="chooseImage($event)" hidden id="choose-image" type="file" accept="image/*" />
+                </div>
+                <div class="p-field">
+                    <label >Action URL</label>
+                    <InputText v-model.trim="slide.url" required="true" autofocus/>
+                </div>
+                <div class="p-field pt-2">
+                    <label>Status</label>
+                    <Dropdown v-model="slide.status" 
+                        :options="slideStatus"
+                        optionValue="value" 
+                        optionLabel="name" 
+                        placeholder="Select a status">
+				    </Dropdown>
+                </div>
+                <div class="p-field">
+                    <label >Ordering</label>
+                    <InputNumber v-model.trim="slide.ordering" required="true" autofocus/>
+                </div>
+                <template #footer>
+                    <Button v-if="isCreating" label="Loading.." icon="pi pi-loading" class="p-button-text" />
+                    <Button v-else @click="validateBeforeCreate" label="Save" icon="pi pi-check" class="p-button-text" />
+                </template>
+            </Dialog>
+        </div>
+    </div>
+</div>
