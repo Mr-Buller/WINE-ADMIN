@@ -29,6 +29,7 @@
     padding-right: 2rem !important;
 }
 .stage-badge {
+    cursor: pointer;
     border-radius: 2px;
     padding: 0.25em 0.5rem;
     text-transform: uppercase;
@@ -51,6 +52,15 @@
 .stage-badge.status-waiting {
     background: #cce5ff;
     color: #004085;
+}
+.text-color-warning {
+    color: #8a5340;
+}
+.text-color-success {
+    color: #256029;
+}
+.text-color-danger {
+    color: #c63737;
 }
 .p-button-label {
     font-weight: 600;
