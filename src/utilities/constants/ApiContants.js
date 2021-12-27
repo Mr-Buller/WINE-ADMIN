@@ -5,6 +5,15 @@ const ApiContant = {
     // Auth
     login : baseUrl + v1 + '/auth/login',
 
+    // Product
+    listProduct : baseUrl + v1 + '/product/list',
+    product : baseUrl + v1 + '/product',
+    updateProduct : baseUrl + v1 + '/product/update',
+
+    // Variant
+    variant : baseUrl + v1 + '/product/product-variant/product',
+    updateVariant : baseUrl + v1 + '/product/product-variant/combination/update',
+
     // Branch
     listBrand: baseUrl + v1 + '/brand/list',
     brand: baseUrl + v1 + '/brand',

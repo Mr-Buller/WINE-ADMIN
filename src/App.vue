@@ -43,6 +43,7 @@ export default {
             mobileMenuActive: false,
             menu : [
                 {label: 'Dashboard', icon: 'pi pi-fw pi-chart-bar', to: '/', items: null},
+                {label: 'Product', icon: 'pi pi-fw pi-list', to: '/product', items: null},
                 {label: 'Category', icon: 'pi pi-fw pi-sort', to: '/category', items: null},
                 {label: 'Brand', icon: 'pi pi-fw pi-cloud', to: '/brand', items: null},
                 {label: 'Customer', icon: 'pi pi-fw pi-user', to: '/customer', items: null},

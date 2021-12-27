@@ -70,10 +70,10 @@
             <Dialog :visible.sync="showUpdateDialog" :style="{width: '450px'}" header="Update Slide" :modal="true"
                 class="p-fluid">
                 <div class="p-field">
-                    <label for="choose-image" class="pointer">
+                    <label for="ggchoose-image" class="pointer">
                         <img :src="slide.imageFile ? fileToPath(slide.imageFile) : slide.image ? getFullPathImage(slide.image) : require('@/assets/logo.png')" class="product-image" />
                     </label>
-                    <input @change="chooseImage($event)" hidden id="choose-image" type="file" accept="image/*" />
+                    <input @change="chooseImage($event)" hidden id="ggchoose-image" type="file" accept="image/*" />
                 </div>
                 <div class="p-field">
                     <label >Action URL</label>

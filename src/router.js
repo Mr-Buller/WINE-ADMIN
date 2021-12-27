@@ -7,10 +7,15 @@ import Login from './pages/login'
 // Role
 import Role from './pages/role'
 
-// Contact management
+// Customer
 import Customer from './pages/customer'
 
-// Product management
+// Product 
+import Product from './pages/product'
+import CreateProduct from './pages/product/create'
+import UpdateProduct from './pages/product/update'
+
+// Category 
 import Category from './pages/category'
 
 // Brand
@@ -44,6 +49,9 @@ const routes = [
   { path: '/category',name: 'category', component: Category, beforeEnter: isLoggedIn },
   { path: '/brand',name: 'brand', component: Brand, beforeEnter: isLoggedIn },
   { path: '/slide',name: 'slide', component: Slide, beforeEnter: isLoggedIn },
+  { path: '/product',name: 'product', component: Product, beforeEnter: isLoggedIn },
+  { path: '/product/create',name: 'product-create', component: CreateProduct, beforeEnter: isLoggedIn },
+  { path: '/product/update/:id',name: 'product-update', component: UpdateProduct, beforeEnter: isLoggedIn },
 ]
 
 const router = new VueRouter({

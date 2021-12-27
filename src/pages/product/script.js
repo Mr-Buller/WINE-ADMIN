@@ -1,9 +1,10 @@
 import UploadService from './../../utilities/services/UploadService';
-import SlideService from './../../utilities/services/SlideService';
+import BrandService from './../../utilities/services/BrandService';
+import ProductService from './../../utilities/services/ProductService';
 import Helper from './../../utilities/Helper'
 
 export default {
-	name: "slide",
+	name: "product",
 	data() {
 		return {
 			isFetching: true,
@@ -15,15 +16,14 @@ export default {
 			updateIndex: -1,
 			keySearch: "",
 			data:{
-				slides: []
+				categories: [],
+				products: []
 			},
-			slide:{
-				id: null,
+			brand:{
+				id: -1,
 				imageFile : "",
 				image: "",
-				url: "",
-				status: "true",
-				ordering: 0
+				name: ""
 			},
 			pagination:{
 				page : 0,
@@ -31,54 +31,57 @@ export default {
 				totalPage: 0,
 				length: 0
 			},
-			slideStatus:[
-				{value:"true", name:"Enabled"},
-				{value:"false", name:"Disabled"}
-			]
 		}
 	},
 	created() {
-		this.getSlide()
+		this.getProduct()
 	},
 	watch: {
 		"$route.fullPath": function() {
-			this.getSlide();
+			this.getProduct();
 		},
 	},
 	mounted() {
 
 	},
 	methods: {
-		getSlide() {
+		getProduct() {
 			let keySearch = this.$route.query.search
 			let params = "?page="+this.pagination.page+"&size="+this.pagination.size
 			if(keySearch){ params = params+"&query="+keySearch }
-            SlideService.getSlide(params).then((response) => {
+            ProductService.getProduct(params).then((response) => {
 				this.isFetching = false
                 if (response.response && response.response.status == 200) {
-                    this.data.slides = response.results
+                    this.data.products = response.results
                 }
             }).catch(err => { console.log(err) })
+		},
+		
+		async searchBrand(){
+			this.pagination.page = 0
+			const query = Object.assign({}, this.$route.query)
+			query.search = this.keySearch
+			await this.$router.push({ name: 'brand', query }).catch(() => {})
 		},
 
 		async validateBeforeCreate(){
 			this.isCreating = true
-            if(this.slide.imageFile){
+            if(this.brand.imageFile){
                 this.isUploadingImage = true
-                this.uploadImage(this.slide.imageFile)
+                this.uploadImage(this.brand.imageFile)
             }else{
-                this.createSlide()
+                this.createBrand()
             }
 		},
 		
 		async validateBeforeUpdate(){
 			this.isUpdating = true
 			this.isCreating = true
-            if(this.slide.imageFile){
+            if(this.brand.imageFile){
                 this.isUploadingImage = true
-                this.uploadImage(this.slide.imageFile)
+                this.uploadImage(this.brand.imageFile)
             }else{
-                this.updateSlide()
+                this.updateBrand()
             }
         },
 
@@ -89,32 +92,29 @@ export default {
             .then((response) => {
                 if(response.response && response.response.status == 200){
                     this.isUploadingImage = false
-					this.slide.image = response.results.path
+					this.brand.image = response.results.path
 					if(this.updateIndex > -1){
-						this.updateSlide()
+						this.updateBrand()
 					}else{
-						this.createSlide()
+						this.createBrand()
 					}
                 }
             })
         },
 
-		createSlide(){
+		createBrand(){
 			let msgValidation = this.validateBody()
 			if(msgValidation == "OK"){
 				this.isCreating = true
 				let body = {
-					id: null,
-					image: this.slide.image,
-					status: this.slide.status,
-					ordering: this.slide.ordering,
-					actionUrl: this.slide.url
+					name: this.brand.name,
+					logo: this.brand.image,
+					status: true
 				}
-				this.data.slides.push(body)
-				SlideService.createSlide(this.data.slides).then((response) => {
+				BrandService.createBrand(body).then((response) => {
 					this.isCreating = false
 					if (response.response && response.response.status == 200) {
-						this.data.slides = response.results
+						this.data.categories.push(response.results)
 						this.hideDialog()
 					}
 				}).catch(err => { console.log(err) })
@@ -123,21 +123,20 @@ export default {
 			}
 		},
 
-		updateSlide() {
+		updateBrand() {
 			let msgValidation = this.validateBody()
 			if(msgValidation == "OK"){
 				this.isUpdating = true
-				this.data.slides[this.updateIndex] = {
-					id: this.slide.id,
-					image: this.slide.image,
-					status: this.slide.status,
-					ordering: this.slide.ordering,
-					actionUrl: this.slide.url
+				let body = {
+					id: this.brand.id,
+					name: this.brand.name,
+					logo: this.brand.image,
+					status: true
 				}
-				SlideService.updateSlide(this.data.slides).then((response) => {
+				BrandService.updateBrand(body).then((response) => {
 					this.isUpdating = false
 					if (response.response && response.response.status == 200) {
-						this.data.slides = response.results
+						this.data.categories[this.updateIndex] = response.results
 						this.hideDialog()
 					}
 				}).catch(err => { console.log(err) })
@@ -147,7 +146,7 @@ export default {
 		},
 
 		validateBody(){
-			if(!this.slide.url){ return "Action URL is required." }
+			if(!this.brand.name){ return "Name is required." }
 			return "OK"
 		},
 
@@ -157,13 +156,11 @@ export default {
 
 		openUpdateDialog(index) {
 			this.updateIndex = index
-			let slide = this.data.slides[index]
-			this.slide = {
-				id: slide.id,
-				url: slide.actionUrl,
-				image: slide.image,
-				status: slide.status.toString(),
-				ordering: slide.ordering
+			let brand = this.data.categories[index]
+			this.brand = {
+				id: brand.id,
+				name: brand.name,
+				image: brand.logo
 			}
 			this.showUpdateDialog = true
 		},
@@ -179,7 +176,7 @@ export default {
 
 		resetBody(){
 			this.updateIndex = -1
-			this.slide = {
+			this.brand = {
 				imageFile : "",
 				image: "",
 				name: ""
@@ -189,11 +186,12 @@ export default {
 		chooseImage(e){
             let images = e.target.files;
             if(images.length > 0){
-                this.slide.image = ""
+                this.brand.image = ""
                 for(let i=0; i<images.length; i++){
 					var imageFile = images[i]
                     Helper.compressImage(imageFile).then(file => {
-						this.$set(this.slide, 'imageFile', file);
+						console.log(file)
+                        this.brand.imageFile = file
                     })
                 }
             }
