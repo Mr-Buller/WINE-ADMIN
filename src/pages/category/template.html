@@ -4,7 +4,7 @@
             <Toast />
             <Toolbar class="no-bg">
                 <template slot="right">
-                    <Button label="New" icon="pi pi-plus" class="p-button-success p-mr-2" @click="openCreateCategoryDialog" />
+                    <Button label="New" icon="pi pi-plus" class="p-button-success" @click="openCreateCategoryDialog" />
                 </template>
             </Toolbar>
 
@@ -20,9 +20,7 @@
                     </div>
                 </template>
 
-                <Column header="ID" field="id" 
-                    headerStyle="width:50px;text-align:center" 
-                    bodyStyle="text-align:center"></Column>
+                <Column header="ID" field="id" headerStyle="width:50px;text-align:center" bodyStyle="text-align:center"></Column>
                 <Column field="name" header="Name"></Column>
                 <Column header="Action" headerStyle="width: 200px;text-align:center" bodyStyle="text-align:center">
                     <template #body="slotProps">
