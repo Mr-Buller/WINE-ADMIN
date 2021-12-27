@@ -22,6 +22,8 @@ export default {
 				imageFile : "",
 				image: "",
 				url: "",
+				title: "",
+				description: "",
 				status: "true",
 				ordering: 0
 			},
@@ -73,7 +75,6 @@ export default {
 		
 		async validateBeforeUpdate(){
 			this.isUpdating = true
-			this.isCreating = true
             if(this.slide.imageFile){
                 this.isUploadingImage = true
                 this.uploadImage(this.slide.imageFile)
@@ -108,7 +109,9 @@ export default {
 					image: this.slide.image,
 					status: this.slide.status,
 					ordering: this.slide.ordering,
-					actionUrl: this.slide.url
+					actionUrl: this.slide.url,
+					title: this.slide.title,
+					description: this.slide.description
 				}
 				this.data.slides.push(body)
 				SlideService.createSlide(this.data.slides).then((response) => {
@@ -132,7 +135,9 @@ export default {
 					image: this.slide.image,
 					status: this.slide.status,
 					ordering: this.slide.ordering,
-					actionUrl: this.slide.url
+					actionUrl: this.slide.url,
+					title: this.slide.title,
+					description: this.slide.description
 				}
 				SlideService.updateSlide(this.data.slides).then((response) => {
 					this.isUpdating = false
@@ -163,7 +168,9 @@ export default {
 				url: slide.actionUrl,
 				image: slide.image,
 				status: slide.status.toString(),
-				ordering: slide.ordering
+				ordering: slide.ordering,
+				title: slide.title,
+				description: slide.description
 			}
 			this.showUpdateDialog = true
 		},

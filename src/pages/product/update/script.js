@@ -28,6 +28,8 @@ export default {
 				categoryId: "",
 				brandId: "",
 				status: true,
+				description: "",
+				shortDescription: ""
 			},
 			status: [
 				{ name: "Enabled", value: true },
@@ -65,6 +67,8 @@ export default {
 							categoryId: product.category.id,
 							brandId: product.brand.id,
 							status: product.status,
+							description: product.description,
+							shortDescription: product.shortDescription
 						}
 					}
 				}).catch(err => { console.log(err) })

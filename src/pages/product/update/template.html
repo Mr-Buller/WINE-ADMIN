@@ -54,6 +54,14 @@
                                     optionLabel="name"
                                     id="status" />
                             </div>
+                            <div class="p-field p-col-12">
+                                <label for="shortDescription">Short Description</label>
+                                <InputText v-model="product.shortDescription" id="shortDescription" type="text" />
+                            </div>
+                            <div class="p-field p-col-12">
+                                <label for="shortDescription">Description</label>
+                                <Textarea v-model="product.description" :autoResize="true" rows="5" cols="30" />
+                            </div>
                         </div>
     
                         <Button v-if="!isUpdating" label="Update" class="p-button-success p-mr-2" @click="validateBeforeUpdate" />

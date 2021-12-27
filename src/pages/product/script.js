@@ -46,9 +46,9 @@ export default {
 	},
 	methods: {
 		getProduct() {
-			let keySearch = this.$route.query.search
+			this.keySearch = this.$route.query.query
 			let params = "?page="+this.pagination.page+"&size="+this.pagination.size
-			if(keySearch){ params = params+"&query="+keySearch }
+			if(this.keySearch){ params = params+"&query="+this.keySearch }
             ProductService.getProduct(params).then((response) => {
 				this.isFetching = false
                 if (response.response && response.response.status == 200) {
@@ -57,11 +57,11 @@ export default {
             }).catch(err => { console.log(err) })
 		},
 		
-		async searchBrand(){
+		async searchProduct(){
 			this.pagination.page = 0
 			const query = Object.assign({}, this.$route.query)
-			query.search = this.keySearch
-			await this.$router.push({ name: 'brand', query }).catch(() => {})
+			query.query = this.keySearch
+			await this.$router.push({ name: 'product', query }).catch(() => {})
 		},
 
 		async validateBeforeCreate(){
