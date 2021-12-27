@@ -1,0 +1,104 @@
+<div class="p-grid crud-demo">
+    <div v-if="data.variants.length == 0" class="p-col">
+        <div class="p-col-12">
+            <vue-tags-input
+                v-model="tags"
+                :tags="options"
+                @tags-changed="newTags => options = newTags"
+                />
+        </div>
+    
+        <div v-if="options.length > 0" class="p-col p-p-0">
+            <div class="p-col">
+                <h4 class="p-mb-0">Option</h4>
+            </div>
+            <div v-for="(option, optionIndex) in options" :key="(option, optionIndex)" class="p-col">
+                <div class="col-md-4 pull-left">
+                    <label class="col-form-label">{{option.text}}</label>
+                    <vue-tags-input
+                        v-model="option.tag"
+                        :tags="option.values"
+                        @tags-changed="newTags => option.values = newTags"
+                        />
+                </div>
+            </div>
+            <div class="p-col">
+                <Button @click="generateVariantion" label="Generate Variantion" class="p-button-success p-mr-2"/>
+            </div>
+        </div>
+    
+        <div v-if="body.variants.length > 0" class="p-col-12">
+            <table style="width:100%">
+                <thead>
+                    <tr style="background: #f5f6f7;">
+                        <th width="50px" class="p-text-center">No</th>
+                        <th v-for="(option, optionIndex) in options" 
+                            :key="(option.id)"
+                            class="p-text-left">
+                            {{option.text}}
+                        </th>
+                        <th width="100px" class="p-text-right">Price</th>
+                        <th width="100px" class="p-text-right">QTY</th>
+                    </tr>
+                </thead>
+                <tbody >
+                    <tr v-for="(variant, variantIndex) in body.variants" 
+                    :key="(variant, variantIndex)">
+                        <td class="p-text-center">{{variantIndex+1}}</td>
+                        <td v-for="(optionValue, optionValueIndex) in body.optionMatrix[variantIndex]" 
+                        :key="(optionValue, optionValueIndex)">{{optionValue.optionValues.name}}</td>
+                        <td class="p-text-right">
+                            <InputNumber v-model="variant.price" class="p-text-right"/>
+                        </td>
+                        <td>
+                            <InputNumber v-model="variant.quantity" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="p-col p-text-right p-pr-0">
+                <Button v-if="!isCreating" @click="confirmCreateVariants" label="Submit" class="p-button-success"/>
+                <Button v-else label="Loading..." class="p-button-success"/>
+            </div>
+        </div>
+    </div>
+
+
+    <div v-if="data.variants.length > 0" class="p-col-12">
+        <table style="width:100%">
+            <thead>
+                <tr style="background: #f5f6f7;">
+                    <th width="50px" class="p-text-center">No</th>
+                    <th class="p-text-left">Combination</th>
+                    <th width="100px" class="p-text-right">Price</th>
+                    <th width="100px" class="p-text-right">Quantity</th>
+                    <th width="150px" class="p-text-right">Action</th>
+                </tr>
+            </thead>
+            <tbody >
+                <tr v-for="(variant, variantIndex) in data.variants" 
+                :key="(variant, variantIndex)">
+                    <td class="p-text-center">{{variantIndex+1}}</td>
+                    <td >{{variant.combination}}</td>
+                    <td class="p-text-right">
+                        <InputNumber v-if="update.index == variantIndex" v-model="update.price" class="p-text-right"/>
+                        <span v-else>{{formatNumber(variant.price)}}</span>
+                    </td>
+                    <td class="p-text-right">
+                        <InputNumber v-if="update.index == variantIndex" v-model="update.quantity" class="p-text-right"/>
+                        <span v-else>{{formatNumber(variant.quantity)}}</span>
+                    </td>
+                    <td class="p-text-right">
+                        <button v-if="update.index == -1" @click="enableUpdateVariant(variantIndex)" class="stage-badge status-waiting" style="border: none;">Edit</button>
+                        <button v-if="update.index == variantIndex" @click="updateVariant(variantIndex)" class="stage-badge status-complete p-mr-2" style="border: none;">
+                            Done
+                        </button>
+                        <button v-if="update.index == variantIndex" @click="disableUpdateVariant" class="stage-badge" style="border: none;">
+                            Cancel
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -40,6 +40,7 @@
 		"vue-template-compiler": "^2.6.10"
 	},
 	"dependencies": {
+		"@johmun/vue-tags-input": "^2.1.0",
 		"browser-image-compression": "^1.0.17",
 		"vue-cookies": "^1.7.4",
 		"vue-moment": "^4.1.0",
