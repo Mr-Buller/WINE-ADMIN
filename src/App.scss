@@ -77,3 +77,8 @@ h1, h2, h3, h4, h5, h6 {
 .p-datatable.p-datatable-sm .p-datatable-header {
     padding: 1rem 1rem !important;
 }
+.p-tabview .p-tabview-nav li .p-tabview-nav-link:not(.p-disabled):focus {
+    // -webkit-box-shadow: 0 0 0 0.2rem #a6d5fa;
+    // box-shadow: 0 0 0 0.2rem #a6d5fa;
+    box-shadow: none !important;
+}
