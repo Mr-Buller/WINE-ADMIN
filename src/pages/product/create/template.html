@@ -62,11 +62,9 @@
                             <Textarea v-model="product.description" :autoResize="true" rows="5" cols="30" />
                         </div>
                     </div>
-
-                    <div class="p-col p-text-right p-p-0">
-                        <Button v-if="!isCreating" label="Submit" class="p-button-success" @click="validateBeforeCreate" />
-                        <Button v-else label="Loading..." icon="pi pi-plus" class="p-button-success"/>
-                    </div>
+                    <Button label="Back" icon="pi pi-angle-left" class="p-button-secondary p-mr-2" @click="$router.go(-1)" />
+                    <Button v-if="!isCreating" label="Create" icon="pi pi-bookmark" class="p-mr-2" @click="validateBeforeCreate" />
+                    <Button v-else label="Loading" icon="pi pi-spin pi-spinner" class="p-mr-2"/>
                 </div>
             </div>
             

@@ -16,17 +16,14 @@
                     </div>
                 </template>
 
-                <Column header="ID" field="id" 
-                    headerStyle="width: 100px;text-align:center" 
-                    bodyStyle="text-align:center"></Column>
+                <Column header="ID" field="id" headerStyle="width:50px;text-align:center" bodyStyle="text-align:center"></Column>
                 <Column field="name" header="Name" 
                     style="text-align: center;"></Column>
                 <Column field="enabled" header="Status" 
-                    headerStyle="width: 200px;text-align:center"
-                    bodyStyle="text-align:center">
+                    headerStyle="width: 100px">
                     <template #body="slotProps">
-                        <span v-if="slotProps.data.enabled" class="p-text-success">Enabled</span>
-                        <span v-else >Disabled</span>
+                        <span v-if="slotProps.data.enabled" class="text-color-success">Enabled</span>
+                        <span v-else class="text-color-danger">Disabled</span>
                     </template>
                 </Column>
                 <Column header="Action" 
@@ -39,20 +36,25 @@
             </DataTable>
 
             <!-- Dialog of Create Role -->
-            <Dialog :visible.sync="showCreateRoleDialog" :style="{width: '450px'}" header="Create Role" :modal="true"
-                class="p-fluid">
-                <div class="p-field">
-                    <label for="name">Name</label>
-                    <InputText id="name" v-model.trim="body.name" required="true" autofocus/>
-                </div>
-                <div class="p-field pt-2">
-                    <label>Status</label>
-                    <Dropdown v-model="body.status" 
-                        :options="roleStatus"
-                        optionValue="value" 
-                        optionLabel="name" 
-                        placeholder="Select a status">
-				    </Dropdown>
+            <Dialog :visible.sync="showCreateRoleDialog" :style="{width: '50vw'}" header="Create Role" :modal="true" class="p-fluid">
+                <div class="p-grid">
+                    <div class="p-col-8">
+                        <div class="p-field">
+                            <label for="name">Name</label>
+                            <InputText id="name" v-model.trim="body.name" required="true" autofocus/>
+                        </div>
+                    </div>
+                    <div class="p-col-4">
+                        <div class="p-field pt-2">
+                            <label>Status</label>
+                            <div class="p-grid">
+                                <div v-for="status in roleStatus" :key="status.name" class="p-col p-field-radiobutton">
+                                    <RadioButton :id="status.name" name="status" :value="status.value" v-model="body.status" />
+                                    <label :for="status.name">{{status.name}}</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <template #footer>
                     <Button v-if="isCreatingRole" label="Loading.." icon="pi pi-loading" class="p-button-text" />
@@ -68,13 +70,11 @@
                     <InputText id="name" v-model.trim="body.name" required="true" autofocus/>
                 </div>
                 <div class="p-field pt-2">
-                    <label>Role</label>
-                    <Dropdown v-model="body.status" 
-                        :options="roleStatus"
-                        optionValue="value" 
-                        optionLabel="name" 
-                        placeholder="Select a status">
-				    </Dropdown>
+                    <label>Status</label>
+                    <div v-for="status in roleStatus" :key="status.name" class="p-field-radiobutton">
+                        <RadioButton :id="status.name" name="status" :value="status.value" v-model="body.status" />
+                        <label :for="status.name">{{status.name}}</label>
+                    </div>
                 </div>
                 <template #footer>
                     <Button v-if="isUpdatingRole" label="Loading.." icon="pi pi-loading" class="p-button-text" />

@@ -29,6 +29,7 @@
     padding-right: 2rem !important;
 }
 .stage-badge {
+    cursor: pointer;
     border-radius: 2px;
     padding: 0.25em 0.5rem;
     text-transform: uppercase;
@@ -52,6 +53,15 @@
     background: #cce5ff;
     color: #004085;
 }
+.text-color-warning {
+    color: #8a5340;
+}
+.text-color-success {
+    color: #256029;
+}
+.text-color-danger {
+    color: #c63737;
+}
 .p-button-label {
     font-weight: 600;
 }
@@ -66,4 +76,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 .p-datatable.p-datatable-sm .p-datatable-header {
     padding: 1rem 1rem !important;
+}
+.p-tabview .p-tabview-nav li .p-tabview-nav-link:not(.p-disabled):focus {
+    // -webkit-box-shadow: 0 0 0 0.2rem #a6d5fa;
+    // box-shadow: 0 0 0 0.2rem #a6d5fa;
+    box-shadow: none !important;
 }
