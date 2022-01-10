@@ -36,4 +36,34 @@ CustomerService.updateCustomer = async function (customerId,body) {
     })
 };
 
+CustomerService.disableCustomer = async function (customerId){
+    return await axios.put(ApiContant.customer+"/"+customerId+"/disable","",
+        Service.headers())
+    .then((response) => {
+        return Service.validateError(response);
+    }).catch(function (error) {
+        return error.response.data;
+    })
+};
+
+CustomerService.enableCustomer = async function (customerId){
+    return await axios.put(ApiContant.customer+"/"+customerId+"/enable","",
+        Service.headers())
+    .then((response) => {
+        return Service.validateError(response);
+    }).catch(function (error) {
+        return error.response.data;
+    })
+};
+
+CustomerService.getCustomerAddress = async function (customerId){
+    return await axios.get(ApiContant.customer+"/"+customerId+"/address",
+        Service.headers())
+    .then((response) => {
+        return Service.validateError(response);
+    }).catch(function (error) {
+        return error.response.data;
+    })
+};
+
 export default CustomerService;

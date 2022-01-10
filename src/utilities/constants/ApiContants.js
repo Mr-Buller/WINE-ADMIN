@@ -21,6 +21,8 @@ const ApiContant = {
 
     // User
     userInfo: baseUrl + v1 + '/auth/user-info',
+    listUser: baseUrl + v1 + '/user-detail/list',
+    user : baseUrl + v1 + '/user-detail',
 
     // Category
     listCategory: baseUrl + v1 + '/category/list',
@@ -43,6 +45,10 @@ const ApiContant = {
     // Slide
     slide: baseUrl + v1 + '/slide',
     listSlide: baseUrl + v1 + '/slide/list',
+
+    // Order
+    order: baseUrl + v1 + '/order',
+    listOrder: baseUrl + v1 + '/order/list',
 
     //upload
     uploadImage: baseUrl+'/storage/upload-image-',

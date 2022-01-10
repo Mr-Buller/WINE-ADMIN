@@ -10,6 +10,9 @@ import Role from './pages/role'
 // Customer
 import Customer from './pages/customer'
 
+// User
+import User from './pages/user'
+
 // Product 
 import Product from './pages/product'
 import CreateProduct from './pages/product/create'
@@ -23,6 +26,10 @@ import Brand from './pages/brand'
 
 // Slide
 import Slide from './pages/slide'
+
+// Order
+import Order from './pages/order'
+import OrderDetail from './pages/order/detail'
 
 
 const isLoggedIn = (to, from, next) => {
@@ -52,6 +59,9 @@ const routes = [
   { path: '/product',name: 'product', component: Product, beforeEnter: isLoggedIn },
   { path: '/product/create',name: 'product-create', component: CreateProduct, beforeEnter: isLoggedIn },
   { path: '/product/update/:id',name: 'product-update', component: UpdateProduct, beforeEnter: isLoggedIn },
+  { path: '/user',name: 'user', component: User, beforeEnter: isLoggedIn },
+  { path: '/order',name: 'order', component: Order, beforeEnter: isLoggedIn },
+  { path: '/order/:id',name: 'order-detail', component: OrderDetail, beforeEnter: isLoggedIn },
 ]
 
 const router = new VueRouter({

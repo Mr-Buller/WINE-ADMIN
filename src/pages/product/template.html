@@ -5,7 +5,7 @@
             <Toolbar class="no-bg">
                 <template slot="right">
                     <router-link :to="{name: 'product-create'}">
-                        <Button label="New" icon="pi pi-plus" class="p-button-success" @click="openCreateDialog" />
+                        <Button label="New" icon="pi pi-plus" class="p-button-success p-mr-2" />
                     </router-link>
                 </template>
             </Toolbar>
@@ -17,7 +17,7 @@
                         <h5 class="p-m-0">Product</h5>
                         <span class="p-input-icon-left">
                             <i class="pi pi-search" />
-                            <InputText @keyup.enter="searchBrand" v-model="keySearch" placeholder="Search" />
+                            <InputText @keyup.enter="searchProduct" v-model="keySearch" placeholder="Search" />
                         </span>
                     </div>
                 </template>
@@ -31,16 +31,16 @@
                     </template>
                 </Column>
                 <Column field="name" header="Name"></Column>
-                <Column field="price" header="Price"></Column>
-                <Column field="discount" header="Discount"></Column>
-                <Column field="status" header="Status"></Column>
-                <Column header="Action" headerStyle="width: 200px;text-align:center" bodyStyle="text-align:center">
+                <Column field="price" header="Price" headerStyle="width: 100px;text-align:right" bodyStyle="text-align:right"></Column>
+                <Column field="discount" header="Discount" headerStyle="width: 100px;text-align:right" bodyStyle="text-align:right"></Column>
+                <Column field="status" header="Status" headerStyle="width: 100px;text-align:center" bodyStyle="text-align:center"></Column>
+                <Column header="Action" headerStyle="width: 100px;text-align:center" bodyStyle="text-align:center">
                     <template #body="slotProps">
                         <router-link :to="{name: 'product-update', params:{id: slotProps.data.id}}" class="stage-badge status-waiting">Edit</router-link>
                     </template>
                 </Column>
             </DataTable>
-            <Paginator v-if="!isFetching && data.categories.length > 0" :rows="pagination.size" :totalRecords="pagination.length" @page="onPage($event)"></Paginator>
+            <Paginator v-if="!isFetching && data.products.length > 0" :rows="pagination.size" :totalRecords="pagination.length" @page="onPage($event)"></Paginator>
 
             <!-- Dialog of Create Brand -->
             <Dialog :visible.sync="showCreateDialog" :style="{width: '450px'}" header="Create Brand" :modal="true"

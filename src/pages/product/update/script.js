@@ -28,6 +28,8 @@ export default {
 				categoryId: "",
 				brandId: "",
 				status: true,
+				description: "",
+				shortDescription: ""
 			},
 			status: [
 				{ name: "Enabled", value: true },
@@ -65,6 +67,8 @@ export default {
 							categoryId: product.category.id,
 							brandId: product.brand.id,
 							status: product.status,
+							description: product.description,
+							shortDescription: product.shortDescription
 						}
 					}
 				}).catch(err => { console.log(err) })
@@ -147,7 +151,6 @@ export default {
 		validateBody() {
 			if (!this.product.name) { return "Product name is required." }
 			if (!this.product.price) { return "Price is required." }
-			if (!this.product.discount) { return "Discount is required." }
 			if (!this.product.categoryId) { return "Category is required." }
 			if (!this.product.brandId) { return "Brand is required." }
 			return "OK"

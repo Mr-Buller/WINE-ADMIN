@@ -25,6 +25,8 @@ export default {
 				categoryId: "",
 				brandId: "",
 				status: true,
+				description: "",
+				shortDescription: ""
 			},
 			status: [
 				{ name: "Enabled", value: true },
@@ -84,7 +86,9 @@ export default {
 					"photos": this.product.image,
 					"category": { "id": this.product.categoryId },
 					"brand": { "id": this.product.brandId },
-					"status": this.product.status
+					"status": this.product.status,
+					"description": this.product.description,
+					"shortDescription": this.product.shortDescription
 				}
 				ProductService.createProduct(body).then((response) => {
 					this.isCreating = false
@@ -93,7 +97,7 @@ export default {
 					}
 				}).catch(err => { console.log(err) })
 			} else {
-				this.$toasted.show(msgValidation);
+				alert(msgValidation);
 			}
 		},
 
@@ -113,7 +117,7 @@ export default {
 		validateBody() {
 			if (!this.product.name) { return "Product name is required." }
 			if (!this.product.price) { return "Price is required." }
-			if (!this.product.discount) { return "Discount is required." }
+			if (!this.product.discount.length == 0) { return "Discount is required." }
 			if (!this.product.categoryId) { return "Category is required." }
 			if (!this.product.brandId) { return "Brand is required." }
 			return "OK"
