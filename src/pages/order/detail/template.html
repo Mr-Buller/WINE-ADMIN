@@ -1,0 +1,59 @@
+<div class="p-grid crud-demo">
+    <div class="p-col-12">
+        <div class="card p-p-0">
+            <Toast />
+            <Toolbar class="no-bg">
+                <template slot="right">
+
+                </template>
+            </Toolbar>
+
+            <DataTable :value="data.order.orderDetail" dataKey="id" class="p-datatable-sm">
+                <ProgressBar v-if="isFetching" mode="indeterminate" style="height: .2rem;"></ProgressBar>
+                <template #header>
+                    <div class="table-header">
+                        <h5 class="p-m-0">Orders</h5>
+                    </div>
+                </template>
+
+                <Column header="No" headerStyle="width: 50px;text-align:center"
+                    bodyStyle="text-align:center">
+                    <template #body="slotProps">
+                        {{slotProps.index+1}}
+                    </template>
+                </Column>
+                <Column header="Image" headerStyle="width:100px">
+                    <template #body="slotProps">
+                        <img :src="getFullPathImage(slotProps.data.product.thumbnail)"
+                            style="width: 36px;height: 36px;object-fit: cover;" />
+                    </template>
+                </Column>
+                <Column header="Name">
+                    <template #body="slotProps">
+                        <p class="p-m-0">{{slotProps.data.product.name}}</p>
+                        <small class="p-m-0">Variant : {{slotProps.data.variant}}</small>
+                    </template>
+                </Column>
+                <Column field="quantity" header="Quantity" headerStyle="width: 100px;text-align:right"
+                bodyStyle="text-align:right"></Column>
+                <Column field="unitPrice" header="Price($)" headerStyle="width: 100px;text-align:right"
+                    bodyStyle="text-align:right"></Column>
+                <Column field="product.discount" header="Discount(%)" headerStyle="width: 100px;text-align:right"
+                    bodyStyle="text-align:right"></Column>
+                <Column header="Subtotal($)" headerStyle="width: 100px;text-align:right"
+                    bodyStyle="text-align:right">
+                    <template #body="slotProps">
+                        {{getSubtotal(slotProps.data.quantity,slotProps.data.unitPrice,slotProps.data.product.discount)}}
+                    </template>
+                </Column>
+                <!-- <Column header="Action" headerStyle="width: 200px;text-align:center" bodyStyle="text-align:center">
+                    <template #body="slotProps">
+                        <span class="stage-badge status-complete p-mr-2">Detail</span>
+                        <span class="stage-badge status-waiting">Edit</span>
+                    </template>
+                </Column> -->
+            </DataTable>
+
+        </div>
+    </div>
+</div>

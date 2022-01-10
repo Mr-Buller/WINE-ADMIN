@@ -151,7 +151,6 @@ export default {
 		validateBody() {
 			if (!this.product.name) { return "Product name is required." }
 			if (!this.product.price) { return "Price is required." }
-			if (!this.product.discount) { return "Discount is required." }
 			if (!this.product.categoryId) { return "Category is required." }
 			if (!this.product.brandId) { return "Brand is required." }
 			return "OK"

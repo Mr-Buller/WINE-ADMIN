@@ -16,7 +16,7 @@
                 <ProgressBar v-if="isFetching" mode="indeterminate" style="height: .2rem;"></ProgressBar>
                 <template #header>
                     <div class="table-header">
-                        <h5 class="p-m-0">Customer Management</h5>
+                        <h5 class="p-m-0">Customer</h5>
                         <span class="p-input-icon-left">
                             <i class="pi pi-search" />
                             <InputText @keyup.enter="searchCustomer" v-model="keySearch" placeholder="Search..." />
@@ -24,19 +24,59 @@
                     </div>
                 </template>
                 <Column header="ID" field="id" headerStyle="width:50px;text-align:center" bodyStyle="text-align:center"></Column>
+                <Column header="Photo" headerStyle="width:70px">
+                    <template #body="slotProps" >
+                        <img v-if="slotProps.data.photo" :src="getFullPathImage(slotProps.data.photo)" class="table-image"/>
+                        <img v-else :src="require('@/assets/images/default.jpeg')" class="table-image"/>
+                    </template>
+                </Column>
                 <Column field="fullName" header="Full Name"></Column>
                 <Column field="phone" header="Phone"></Column>
                 <Column field="email" header="Email"></Column>
-                <!-- <Column header="Action" 
+                <Column header="Action" 
                     headerStyle="width: 200px;text-align:center"
                     bodyStyle="text-align:center">
                     <template #body="slotProps" >
-                        <span @click="openUpdateCustomerDialog(slotProps.index)" class="stage-badge status-waiting">Edit</span>
+                        <span v-if="slotProps.data.enabled" @click="openUpdateStatusDialog(slotProps.index)" class="stage-badge status-complete">Enabled</span>
+                        <span v-else @click="openUpdateStatusDialog(slotProps.index)" class="stage-badge status-waiting">Disabled</span>
+                        <span @click="openDetailDialog(slotProps.index)" class="stage-badge status-waiting p-ml-2">View</span>
                     </template>
-                </Column> -->
+                </Column>
             </DataTable>
 
             <Paginator v-if="!isFetching && data.customers.length" :rows="pagination.size" :totalRecords="pagination.length" @page="onPage($event)"></Paginator>
+
+             <!-- Dialog of View Detail -->
+            <Dialog :visible.sync="showDetailDialog" :style="{width: '450px'}" header="Customer Detail" :modal="true" class="p-fluid">
+                <div class="p-grid p-mb-2 p-p-2">
+                    <img v-if="data.customer.photo" :src="getFullPathImage(data.customer.photo)" style="width: 100px;height:100px;object-fit: cover;"/>
+                    <img v-else :src="require('@/assets/images/default.jpeg')" style="width: 100px;height:100px;object-fit: cover;"/>
+                </div>
+                <div class="p-grid p-mb-2">
+                    <div class="p-col"><b>ID</b></div>
+                    <div class="p-col p-text-right">{{data.customer.id}}</div>
+                </div>
+                <div class="p-grid p-mb-2">
+                    <div class="p-col"><b>Name</b></div>
+                    <div class="p-col p-text-right">{{data.customer.fullName}}</div>
+                </div>
+                <div class="p-grid p-mb-2">
+                    <div class="p-col"><b>Phone</b></div>
+                    <div class="p-col p-text-right">{{data.customer.phone}}</div>
+                </div>
+                <div class="p-grid p-mb-2">
+                    <div class="p-col"><b>Email</b></div>
+                    <div class="p-col p-text-right">{{data.customer.email}}</div>
+                </div>
+                <div class="p-grid p-mb-2">
+                    <div class="p-col"><b>Status</b></div>
+                    <div class="p-col p-text-right">{{data.customer.status}}</div>
+                </div>
+                <div class="p-grid p-mb-2">
+                    <div class="p-col"><b>Created At</b></div>
+                    <div class="p-col p-text-right">{{data.customer.created | moment("DD-MM-YYYY")}}</div>
+                </div>
+            </Dialog>
 
             <!-- Dialog of Create Customer -->
             <Dialog :visible.sync="showCreateCustomerDialog" :style="{width: '450px'}" header="Create Customer" :modal="true" class="p-fluid">
@@ -85,8 +125,20 @@
                     <InputText id="address" v-model="customer.address" />
                 </div>
                 <template #footer>
-                    <Button v-if="isUpdatingCustomer" label="Loading..." icon="pi pi-check" class="p-button-text" />
+                    <Button v-if="isUpdating" label="Loading..." icon="pi pi-check" class="p-button-text" />
                     <Button v-else @click="updateCustomer" label="Save" icon="pi pi-check" class="p-button-text" />
+                </template>
+            </Dialog>
+
+            <!-- Dialog of Update Status -->
+            <Dialog :visible.sync="showUpdateStatusDialog" :style="{width: '450px'}" header="Update Customer" :modal="true"
+                class="p-fluid">
+                <div v-if="updateStatusIndex > -1" class="p-field">
+                    <label>Are you sure to {{data.customers[updateStatusIndex].enabled ? 'disable' : 'enable'}} this customer?</label>
+                </div>
+                <template #footer>
+                    <Button v-if="isUpdating" label="Loading..." icon="pi pi-loading" class="p-button-text" />
+                    <Button v-else @click="updateStatus" label="Save" icon="pi pi-check" class="p-button-text" />
                 </template>
             </Dialog>
         </div>
