@@ -4,32 +4,24 @@ import VueRouter from 'vue-router'
 import Dashboard from './pages/dashboard'
 import Login from './pages/login'
 
-// Role
 import Role from './pages/role'
 
-// Customer
 import Customer from './pages/customer'
-
-// User
 import User from './pages/user'
 
-// Product 
 import Product from './pages/product'
 import CreateProduct from './pages/product/create'
 import UpdateProduct from './pages/product/update'
 
-// Category 
 import Category from './pages/category'
-
-// Brand
 import Brand from './pages/brand'
-
-// Slide
 import Slide from './pages/slide'
 
-// Order
 import Order from './pages/order'
 import OrderDetail from './pages/order/detail'
+
+import Country from './pages/country'
+import ContactUs from './pages/contact-us'
 
 
 const isLoggedIn = (to, from, next) => {
@@ -62,6 +54,8 @@ const routes = [
   { path: '/user',name: 'user', component: User, beforeEnter: isLoggedIn },
   { path: '/order',name: 'order', component: Order, beforeEnter: isLoggedIn },
   { path: '/order/:id',name: 'order-detail', component: OrderDetail, beforeEnter: isLoggedIn },
+  { path: '/country',name: 'country', component: Country, beforeEnter: isLoggedIn },
+  { path: '/contact-us',name: 'contact-us', component: ContactUs, beforeEnter: isLoggedIn },
 ]
 
 const router = new VueRouter({

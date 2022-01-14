@@ -1,0 +1,44 @@
+<div class="p-grid crud-demo">
+    <div class="p-col-12">
+        <div class="card p-p-0">
+            <Toast />
+            <Toolbar class="no-bg">
+                <template slot="left">
+                    <h3>Contact Us</h3>
+                </template>
+            </Toolbar>
+            <div class="card">
+                <div class="p-col">
+                    <div class="p-fluid p-formgrid p-grid">
+                        <div class="p-field p-col-12 p-md-6">
+                            <label for="productName">Email</label>
+                            <InputText v-model="contact.email" type="text" />
+                        </div>
+                        <div class="p-field p-col-12 p-md-6">
+                            <label for="productName">Phone</label>
+                            <InputText v-model="contact.phone" type="text" />
+                        </div>
+                        <div class="p-field p-col-12 p-md-6">
+                            <label for="productName">Telegram</label>
+                            <InputText v-model="contact.telegram" type="text" />
+                        </div>
+                        <div class="p-field p-col-12 p-md-6">
+                            <label for="productName">Facebook</label>
+                            <InputText v-model="contact.facebook" type="text" />
+                        </div>
+                        <div class="p-field p-col-12 p-md-6">
+                            <label for="productName">Instagram</label>
+                            <InputText v-model="contact.instagram" type="text" />
+                        </div>
+                        <div class="p-field p-col-12 p-md-6">
+                            <label for="productName">YouTube</label>
+                            <InputText v-model="contact.youTube" type="text" />
+                        </div>
+                    </div>
+                    <Button v-if="!isCreating" @click="createContact" label="Create" icon="pi pi-bookmark" class="p-mr-2" />
+                    <Button v-else label="Loading" icon="pi pi-spin pi-spinner" class="p-mr-2"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

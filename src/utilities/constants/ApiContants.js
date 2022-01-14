@@ -53,6 +53,14 @@ const ApiContant = {
     //upload
     uploadImage: baseUrl+'/storage/upload-image-',
     deleteImage: baseUrl + v1 + '/drop-box/delete',
+
+    // Country
+    country: baseUrl + v1 + '/country',
+    listCountry: baseUrl + v1 + '/country/list',
+    updateCountry: baseUrl + v1 + '/country/update',
+
+    // Contact
+    contact: baseUrl + v1 + '/contact-us',
 }
 
 export default ApiContant;

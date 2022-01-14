@@ -1,4 +1,6 @@
+import UploadService from './../../utilities/services/UploadService';
 import CategoryService from './../../utilities/services/CategoryService';
+import Helper from './../../utilities/Helper'
 
 export default {
 	name: "category",
@@ -7,16 +9,19 @@ export default {
 			isFetching: true,
 			isCreatingCategory: false,
 			isUpdatingCategory: false,
+			isUploadingImage: false,
 			showCreateCategoryDialog: false,
 			showUpdateCategoryDialog: false,
-			updateCategoryIndex: -1,
+			updateIndex: -1,
 			keySearch: "",
 			data:{
 				categories: []
 			},
 			category:{
 				id: -1,
-				name: ""
+				name: "",
+				imageFile : "",
+				image: "",
 			},
 			pagination:{
 				page : 0,
@@ -56,16 +61,43 @@ export default {
 			query.search = this.keySearch
 			await this.$router.push({ name: 'category', query }).catch(() => {})
 		},
-
-		async validateBeforeCreateCategory(){
+		
+		async validateBeforeCreate(){
 			this.isCreatingCategory = true
-            this.createCategory()
+            if(this.category.imageFile){
+                this.isUploadingImage = true
+                this.uploadImage(this.category.imageFile)
+            }else{
+                this.createCategory()
+            }
 		},
 		
-		async validateBeforeUpdateCategory(){
+		async validateBeforeUpdate(){
 			this.isUpdatingCategory = true
 			this.isCreatingCategory = true
-            this.updateCategory()
+            if(this.category.imageFile){
+                this.isUploadingImage = true
+                this.uploadImage(this.category.imageFile)
+            }else{
+                this.updateCategory()
+            }
+        },
+
+		async uploadImage(file){
+            let formData = new FormData()
+            formData.append("file", file)
+            await UploadService.uploadMedia("category",formData)
+            .then((response) => {
+                if(response.response && response.response.status == 200){
+                    this.isUploadingImage = false
+					this.category.image = response.results.path
+					if(this.updateIndex > -1){
+						this.updateCategory()
+					}else{
+						this.createCategory()
+					}
+                }
+            })
         },
 
 		createCategory(){
@@ -74,7 +106,8 @@ export default {
 				this.isCreatingCategory = true
 				let body = {
 					name: this.category.name,
-					status: true
+					status: true,
+					image: this.category.image,
 				}
 				CategoryService.createCategory(body).then((response) => {
 					this.isCreatingCategory = false
@@ -95,12 +128,13 @@ export default {
 				let body = {
 					id: this.category.id,
 					name: this.category.name,
-					status: true
+					status: true,
+					image: this.category.image,
 				}
 				CategoryService.updateCategory(body).then((response) => {
 					this.isUpdatingCategory = false
 					if (response.response && response.response.status == 200) {
-						this.data.categories[this.updateCategoryIndex] = response.results
+						this.data.categories[this.updateIndex] = response.results
 						this.hideDialog()
 					}
 				}).catch(err => { console.log(err) })
@@ -118,13 +152,14 @@ export default {
 			this.showCreateCategoryDialog = true;
 		},
 
-		openUpdateCategoryDialog(index) {
-			this.updateCategoryIndex = index
+		openUpdateDialog(index) {
+			this.updateIndex = index
 			let category = this.data.categories[index]
 			this.category = {
 				id: category.id,
 				name: category.name,
-				status: category.status
+				status: category.status,
+				image: category.image
 			}
 			this.showUpdateCategoryDialog = true
 		},
@@ -138,13 +173,33 @@ export default {
 		},
 
 		resetBodyCategory(){
-			this.updateCategoryIndex = -1
+			this.updateIndex = -1
 			this.category = {
-				name: ""
+				name: "",
+				imageFile : "",
+				image: "",
 			}
 		},
+
+		chooseImage(e){
+            let images = e.target.files;
+            if(images.length > 0){
+                this.category.image = ""
+                for(let i=0; i<images.length; i++){
+					var imageFile = images[i]
+                    Helper.compressImage(imageFile).then(file => {
+						console.log(file)
+						this.$set(this.category, 'imageFile', file);
+                    })
+                }
+            }
+		},
 		
-		fileToPath(file){ return window.URL.createObjectURL(file) }
+		fileToPath(file){ return window.URL.createObjectURL(file) },
+
+		getFullPathImage(path){
+			return process.env.VUE_APP_BASE_URL+path
+		}
 
 	}
 }

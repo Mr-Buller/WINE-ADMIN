@@ -189,7 +189,7 @@ export default {
 					var imageFile = images[i]
                     Helper.compressImage(imageFile).then(file => {
 						console.log(file)
-                        this.brand.imageFile = file
+						this.$set(this.brand, 'imageFile', file);
                     })
                 }
             }
