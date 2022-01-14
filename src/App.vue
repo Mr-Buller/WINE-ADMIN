@@ -51,6 +51,8 @@ export default {
                 {label: 'User', icon: 'pi pi-fw pi-user', to: '/user', items: null},
                 {label: 'Role', icon: 'pi pi-fw pi-list', to: '/role', items: null},
                 {label: 'Slide', icon: 'pi pi-fw pi-image', to: '/slide', items: null},
+                {label: 'Country', icon: 'pi pi-fw pi-list', to: '/country', items: null},
+                {label: 'Contact Us', icon: 'pi pi-fw pi-info', to: '/contact-us', items: null},
 				// {
 				// 	label: 'User Management', icon: 'pi pi-fw pi-users', to: null,
 				// 	items: [

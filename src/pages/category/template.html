@@ -21,10 +21,16 @@
                 </template>
 
                 <Column header="ID" field="id" headerStyle="width:50px;text-align:center" bodyStyle="text-align:center"></Column>
+                <Column header="Image" headerStyle="width:100px">
+                    <template #body="slotProps">
+                        <img v-if="slotProps.data.image" :src="getFullPathImage(slotProps.data.image)" class="table-image" />
+                        <img v-else :src="require('@/assets/images/default.jpeg')" class="table-image"/>
+                    </template>
+                </Column>
                 <Column field="name" header="Name"></Column>
                 <Column header="Action" headerStyle="width: 200px;text-align:center" bodyStyle="text-align:center">
                     <template #body="slotProps">
-                        <span @click="openUpdateCategoryDialog(slotProps.index)" class="stage-badge status-waiting">Edit</span>
+                        <span @click="openUpdateDialog(slotProps.index)" class="stage-badge status-waiting">Edit</span>
                     </template>
                 </Column>
             </DataTable>
@@ -34,12 +40,18 @@
             <Dialog :visible.sync="showCreateCategoryDialog" :style="{width: '450px'}" header="Create Category" :modal="true"
                 class="p-fluid">
                 <div class="p-field">
+                    <label for="choose-image" class="pointer">
+                        <img :src="category.imageFile ? fileToPath(category.imageFile) : require('@/assets/logo.png')" class="product-image" />
+                    </label>
+                    <input @change="chooseImage($event)" hidden id="choose-image" type="file" accept="image/*" />
+                </div>
+                <div class="p-field">
                     <label for="name">Name</label>
                     <InputText id="name" v-model.trim="category.name" required="true" autofocus/>
                 </div>
                 <template #footer>
                     <Button v-if="isCreatingCategory" label="Loading.." icon="pi pi-loading" class="p-button-text" />
-                    <Button v-else @click="validateBeforeCreateCategory" label="Save" icon="pi pi-check" class="p-button-text" />
+                    <Button v-else @click="validateBeforeCreate" label="Save" icon="pi pi-check" class="p-button-text" />
                 </template>
             </Dialog>
 
@@ -47,12 +59,18 @@
             <Dialog :visible.sync="showUpdateCategoryDialog" :style="{width: '450px'}" header="Update Category" :modal="true"
                 class="p-fluid">
                 <div class="p-field">
+                    <label for="choose-update-image" class="pointer">
+                        <img :src="category.imageFile ? fileToPath(category.imageFile) : category.image ? getFullPathImage(category.image) : require('@/assets/logo.png')" class="product-image" />
+                    </label>
+                    <input @change="chooseImage($event)" hidden id="choose-update-image" type="file" accept="image/*" />
+                </div>
+                <div class="p-field">
                     <label for="name">Name</label>
                     <InputText id="name" v-model.trim="category.name" required="true" autofocus/>
                 </div>
                 <template #footer>
                     <Button v-if="isUpdatingCategory" label="Loading.." icon="pi pi-loading" class="p-button-text" />
-                    <Button v-else @click="validateBeforeUpdateCategory" label="Save" icon="pi pi-check" class="p-button-text" />
+                    <Button v-else @click="validateBeforeUpdate" label="Save" icon="pi pi-check" class="p-button-text" />
                 </template>
             </Dialog>
         </div>
