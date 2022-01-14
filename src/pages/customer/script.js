@@ -2,18 +2,23 @@ import CustomerService from './../../utilities/services/CustomerService';
 import Paginator from 'primevue/paginator';
 
 export default {
-	name: "contact-management-customer",
+	name: "customer",
 	data() {
 		return {
 			isFetching: true,
+			showDetailDialog: false,
 			showCreateCustomerDialog: false,
 			showUpdateCustomerDialog: false,
+			showUpdateStatusDialog: false,
 			isCreatingCustomer: false,
-			isUpdatingCustomer: false,
+			isUpdating: false,
 			updateCustomerIndex: -1,
+			updateStatusIndex: -1,
 			keySearch: "",
 			data:{
+				customer: "",
 				customers: [],
+				customerAddress: [],
 				roles: []
 			},
 			pagination:{
@@ -70,6 +75,12 @@ export default {
 			await this.$router.push({ name: 'customer', query }).catch(() => {})
 		},
 
+		openDetailDialog(index){
+			this.data.customer = this.data.customers[index]
+			this.showDetailDialog = true
+			this.getCustomerAddress(this.data.customer.id)
+		},
+
 		openCreateCustomerDialog(){
 			this.showCreateCustomerDialog = true
 		},
@@ -85,6 +96,11 @@ export default {
                 address: customer.address
 			}
 			this.showUpdateCustomerDialog = true;
+		},
+
+		openUpdateStatusDialog(index){
+			this.updateStatusIndex = index
+			this.showUpdateStatusDialog = true
 		},
 
 		async validateBeforeCreateCustomer(){
@@ -112,6 +128,41 @@ export default {
             } else {
                 return "ok";
             }
+		},
+
+		getCustomerAddress(customerId){
+			CustomerService.getCustomerAddress(customerId).then((response) => {
+				if (response && response.status == 200) {
+					this.data.customerAddress = response.results
+				}
+			}).catch(err => { console.log(err) })
+		},
+
+		updateStatus(){
+			let customer = this.data.customers[this.updateStatusIndex]
+			customer.enabled ? this.disableCustomer() : this.enableCustomer()
+		},
+
+		enableCustomer() {
+			let customerId  = this.data.customers[this.updateStatusIndex].id
+			CustomerService.enableCustomer(customerId).then((response) => {
+				this.isUpdating = false
+				if (response && response.status == 200) {
+					this.data.customers[this.updateStatusIndex].enabled = true
+					this.hideDialog()
+				}
+			}).catch(err => { console.log(err) })
+		},
+
+		disableCustomer() {
+			let customerId  = this.data.customers[this.updateStatusIndex].id
+			CustomerService.disableCustomer(customerId).then((response) => {
+				this.isUpdating = false
+				if (response && response.status == 200) {
+					this.data.customers[this.updateStatusIndex].enabled = false
+					this.hideDialog()
+				}
+			}).catch(err => { console.log(err) })
 		},
 		
 		createCustomer(){
@@ -150,6 +201,10 @@ export default {
 		hideDialog(){
 			this.showCreateCustomerDialog = false
 			this.showUpdateCustomerDialog = false
+
+			this.showUpdateStatusDialog = false
+			this.isUpdating = false
+			this.updateStatusIndex = -1
 		},
 
 		exportCSV() {
@@ -160,5 +215,9 @@ export default {
 			this.pagination.page = event.page
 			this.getCustomers()
 		},
+
+		getFullPathImage(path){
+			return process.env.VUE_APP_BASE_URL+path
+		}
 	}
 }

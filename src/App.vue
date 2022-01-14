@@ -43,11 +43,16 @@ export default {
             mobileMenuActive: false,
             menu : [
                 {label: 'Dashboard', icon: 'pi pi-fw pi-chart-bar', to: '/', items: null},
+                {label: 'Product', icon: 'pi pi-fw pi-list', to: '/product', items: null},
                 {label: 'Category', icon: 'pi pi-fw pi-sort', to: '/category', items: null},
                 {label: 'Brand', icon: 'pi pi-fw pi-cloud', to: '/brand', items: null},
+                {label: 'Order', icon: 'pi pi-fw pi-eye', to: '/order', items: null},
                 {label: 'Customer', icon: 'pi pi-fw pi-user', to: '/customer', items: null},
+                {label: 'User', icon: 'pi pi-fw pi-user', to: '/user', items: null},
                 {label: 'Role', icon: 'pi pi-fw pi-list', to: '/role', items: null},
                 {label: 'Slide', icon: 'pi pi-fw pi-image', to: '/slide', items: null},
+                {label: 'Country', icon: 'pi pi-fw pi-list', to: '/country', items: null},
+                {label: 'Contact Us', icon: 'pi pi-fw pi-info', to: '/contact-us', items: null},
 				// {
 				// 	label: 'User Management', icon: 'pi pi-fw pi-users', to: null,
 				// 	items: [

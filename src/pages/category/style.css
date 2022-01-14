@@ -3,3 +3,8 @@
 	height: 100px;
 	object-fit: cover;
 }
+.table-image{
+	width: 36px;
+	height: 36px;
+	object-fit: cover;
+}

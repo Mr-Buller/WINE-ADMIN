@@ -1,0 +1,77 @@
+<div class="p-grid crud-demo">
+    <div class="p-col-12">
+        <div class="card p-p-0">
+            <Toast />
+            <Toolbar class="no-bg">
+                <template slot="left">
+                    <h3 class="p-m-0">Update Product</h3>
+                </template>
+            </Toolbar>
+            
+            <TabView>
+                <TabPanel header="Product General">
+                    <div class="p-col">
+                        <div class="p-field">
+                            <label for="choose-image" class="pointer">
+                                <img :src="product.imageFile ? fileToPath(product.imageFile) : product.image ? getFullPathImage(product.image) : require('@/assets/logo.png')" class="product-image" />
+                            </label>
+                            <input @change="chooseImage($event)" hidden id="choose-image" type="file" accept="image/*" />
+                        </div>
+                        <div class="p-fluid p-formgrid p-grid">
+                            <div class="p-field p-col-12 p-md-6">
+                                <label for="productName">Product Name</label>
+                                <InputText v-model="product.name" id="productName" type="text" />
+                            </div>
+                            <div class="p-field p-col-12 p-md-3">
+                                <label for="price">Price</label>
+                                <InputNumber v-model="product.price" id="price"/>
+                            </div>
+                            <div class="p-field p-col-12 p-md-3">
+                                <label for="discount">Discount</label>
+                                <InputNumber v-model="product.discount" id="discount"/>
+                            </div>
+                            <div class="p-field p-col-12 p-md-4">
+                                <label for="category">Category</label>
+                                <Dropdown v-model="product.categoryId" 
+                                    :options="data.categories" 
+                                    optionValue="id" 
+                                    optionLabel="name"
+                                    id="category" />
+                            </div>
+                            <div class="p-field p-col-12 p-md-4">
+                                <label for="state">Brand</label>
+                                <Dropdown v-model="product.brandId" 
+                                    :options="data.brands" 
+                                    optionValue="id"
+                                    optionLabel="name"
+                                    id="brand" />
+                            </div>
+                            <div class="p-field p-col-12 p-md-4">
+                                <label for="status">Status</label>
+                                <Dropdown v-model="product.status" 
+                                    :options="status" 
+                                    optionValue="value" 
+                                    optionLabel="name"
+                                    id="status" />
+                            </div>
+                            <div class="p-field p-col-12">
+                                <label for="shortDescription">Short Description</label>
+                                <InputText v-model="product.shortDescription" id="shortDescription" type="text" />
+                            </div>
+                            <div class="p-field p-col-12">
+                                <label for="shortDescription">Description</label>
+                                <Textarea v-model="product.description" :autoResize="true" rows="5" cols="30" />
+                            </div>
+                        </div>
+                        <Button label="Back" icon="pi pi-angle-left" class="p-button-secondary p-mr-2" @click="$router.go(-1)" />
+                        <Button v-if="!isUpdating" label="Update" icon="pi pi-bookmark" class="p-mr-2" @click="validateBeforeUpdate" />
+                        <Button v-else label="Loading" icon="pi pi-spin pi-spinner" class="p-mr-2"/>
+                    </div>
+                </TabPanel>
+                <TabPanel header="Variant">
+                    <Variant/>
+                </TabPanel>
+            </TabView>
+        </div>
+    </div>
+</div>

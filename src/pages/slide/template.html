@@ -4,7 +4,7 @@
             <Toast />
             <Toolbar class="no-bg">
                 <template slot="right">
-                    <Button label="New" icon="pi pi-plus" class="p-button-success p-mr-2" @click="openCreateDialog" />
+                    <Button label="New" icon="pi pi-plus" class="p-button-success" @click="openCreateDialog" />
                 </template>
             </Toolbar>
 
@@ -47,6 +47,14 @@
                     <label for="url">Action URL</label>
                     <InputText id="url" v-model.trim="slide.url" required="true" autofocus/>
                 </div>
+                <div class="p-field">
+                    <label for="url">Title</label>
+                    <InputText id="url" v-model.trim="slide.title" required="true" autofocus/>
+                </div>
+                <div class="p-field">
+                    <label for="url">Short Description</label>
+                    <InputText id="url" v-model="slide.description" required="true" autofocus/>
+                </div>
                 <div class="p-field pt-2">
                     <label>Status</label>
                     <Dropdown v-model="slide.status" 
@@ -70,14 +78,22 @@
             <Dialog :visible.sync="showUpdateDialog" :style="{width: '450px'}" header="Update Slide" :modal="true"
                 class="p-fluid">
                 <div class="p-field">
-                    <label for="choose-image" class="pointer">
+                    <label for="ggchoose-image" class="pointer">
                         <img :src="slide.imageFile ? fileToPath(slide.imageFile) : slide.image ? getFullPathImage(slide.image) : require('@/assets/logo.png')" class="product-image" />
                     </label>
-                    <input @change="chooseImage($event)" hidden id="choose-image" type="file" accept="image/*" />
+                    <input @change="chooseImage($event)" hidden id="ggchoose-image" type="file" accept="image/*" />
                 </div>
                 <div class="p-field">
                     <label >Action URL</label>
                     <InputText v-model.trim="slide.url" required="true" autofocus/>
+                </div>
+                <div class="p-field">
+                    <label for="url">Title</label>
+                    <InputText id="url" v-model.trim="slide.title" required="true" autofocus/>
+                </div>
+                <div class="p-field">
+                    <label for="url">Short Description</label>
+                    <InputText id="url" v-model="slide.description" required="true" autofocus/>
                 </div>
                 <div class="p-field pt-2">
                     <label>Status</label>
@@ -93,8 +109,8 @@
                     <InputNumber v-model.trim="slide.ordering" required="true" autofocus/>
                 </div>
                 <template #footer>
-                    <Button v-if="isCreating" label="Loading.." icon="pi pi-loading" class="p-button-text" />
-                    <Button v-else @click="validateBeforeCreate" label="Save" icon="pi pi-check" class="p-button-text" />
+                    <Button v-if="isUpdating" label="Loading.." icon="pi pi-loading" class="p-button-text" />
+                    <Button v-else @click="validateBeforeUpdate" label="Save" icon="pi pi-check" class="p-button-text" />
                 </template>
             </Dialog>
         </div>
