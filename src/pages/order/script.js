@@ -146,7 +146,6 @@ export default {
 			}
 		},
 		
-		fileToPath(file){ return window.URL.createObjectURL(file) }
-
+		fileToPath(file){ return window.URL.createObjectURL(file) },
 	}
 }

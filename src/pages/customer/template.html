@@ -70,7 +70,10 @@
                 </div>
                 <div class="p-grid p-mb-2">
                     <div class="p-col"><b>Status</b></div>
-                    <div class="p-col p-text-right">{{data.customer.status}}</div>
+                    <div class="p-col p-text-right">
+                        <b v-if="data.customer.status" class="text-color-success">Enabled</b>
+                        <b v-else class="text-color-danger">Disabled</b>
+                    </div>
                 </div>
                 <div class="p-grid p-mb-2">
                     <div class="p-col"><b>Created At</b></div>

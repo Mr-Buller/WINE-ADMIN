@@ -1,4 +1,5 @@
 import OrderService from './../../../utilities/services/OrderService';
+import Helper from './../../../utilities/Helper'
 
 export default {
 	name: "order-detail",
@@ -32,6 +33,33 @@ export default {
             }).catch(err => { console.log(err) })
 		},
 
+		confirmOrder() {
+			let orderId = this.$route.params.id
+            OrderService.confirmOrder(orderId).then((response) => {
+                if (response.response && response.response.status == 200) {
+                    this.data.order.orderState = "CONFIRM"
+                }
+            }).catch(err => { console.log(err) })
+		},
+
+		cancelOrder() {
+			let orderId = this.$route.params.id
+            OrderService.cancelOrder(orderId).then((response) => {
+                if (response.response && response.response.status == 200) {
+					this.data.order.orderState = "CANCEL"
+                }
+            }).catch(err => { console.log(err) })
+		},
+
+		completeOrder() {
+			let orderId = this.$route.params.id
+            OrderService.completedOrder(orderId).then((response) => {
+                if (response.response && response.response.status == 200) {
+                    this.data.order.orderState = "COMPLETE"
+                }
+            }).catch(err => { console.log(err) })
+		},
+
 		getSubtotal(qty,price,discount){
 			qty = parseInt(qty)
 			price = parseFloat(price)
@@ -45,7 +73,11 @@ export default {
 			return process.env.VUE_APP_BASE_URL+path
 		},
 		
-		fileToPath(file){ return window.URL.createObjectURL(file) }
+		fileToPath(file){ return window.URL.createObjectURL(file) },
+
+		formatPrice(price){
+            return Helper.formatPrice(price)
+        },
 
 	}
 }

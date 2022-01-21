@@ -3,19 +3,79 @@
         <div class="card p-p-0">
             <Toast />
             <Toolbar class="no-bg">
-                <template slot="right">
-
+                <template slot="left">
+                    <h5 class="p-m-0">Order Ref : {{data.order.ref}}</h5>
                 </template>
-            </Toolbar>
-
-            <DataTable :value="data.order.orderDetail" dataKey="id" class="p-datatable-sm">
-                <ProgressBar v-if="isFetching" mode="indeterminate" style="height: .2rem;"></ProgressBar>
-                <template #header>
-                    <div class="table-header">
-                        <h5 class="p-m-0">Orders</h5>
+                <template slot="right">
+                    <div v-if="data.order.orderState == 'PENDING'">
+                        <span @click="confirmOrder" class="stage-badge status-waiting p-mr-2" style="padding:6px 12px;">Confirm</span>
+                        <span @click="cancelOrder" class="stage-badge status-cancel p-mr-2" style="padding:6px 12px;">Cancel</span>
+                    </div>
+                    <div v-if="data.order.orderState == 'CONFIRM'">
+                        <span @click="completeOrder" class="stage-badge status-complete p-mr-2" style="padding:6px 12px;">Complete</span>
+                        <span @click="cancelOrder" class="stage-badge status-cancel p-mr-2" style="padding:6px 12px;">Cancel</span>
+                    </div>
+                    <div v-if="data.order.orderState == 'COMPLETE'">
+                        <span class="text-color-success stage-badge p-mr-2" style="padding:6px 12px;">Completed</span>
+                    </div>
+                    <div v-if="data.order.orderState == 'CANCEL'">
+                        <span class="text-color-danger stage-badge p-mr-2" style="padding:6px 12px;">cancelled</span>
                     </div>
                 </template>
-
+            </Toolbar>
+            
+            <DataTable v-if="data.order" :value="data.order.orderDetail" dataKey="id" class="p-datatable-sm">
+                <ProgressBar v-if="isFetching" mode="indeterminate" style="height: .2rem;"></ProgressBar>
+                <template #header>
+                    <div class="p-grid p-mt-2">
+                        <div class="p-col">
+                            <div class="p-field p-grid">
+                                <label for="firstname" class="p-col-fixed" style="width:150px">Customer ID</label>
+                                <div class="p-col">
+                                    <span>: {{data.order.customer.id}}</span>
+                                </div>
+                            </div>
+                            <div class="p-field p-grid">
+                                <label for="firstname" class="p-col-fixed" style="width:150px">Customer Name</label>
+                                <div class="p-col">
+                                    <span>: {{data.order.customer.fullName}}</span>
+                                </div>
+                            </div>
+                            <div class="p-field p-grid">
+                                <label for="lastname" class="p-col-fixed" style="width:150px">Email</label>
+                                <div class="p-col">
+                                    <span>: {{data.order.customer.email}}</span>
+                                </div>
+                            </div>
+                            <div class="p-field p-grid">
+                                <label for="lastname" class="p-col-fixed" style="width:150px">Phone</label>
+                                <div class="p-col">
+                                    <span>: {{data.order.customer.phone}}</span>
+                                </div>
+                            </div>
+                            <div class="p-field p-grid">
+                                <label for="lastname" class="p-col-fixed" style="width:150px">Address</label>
+                                <div class="p-col">
+                                    <span>: {{data.order.customerAddress.address}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-col">
+                            <div class="p-field p-grid">
+                                <label for="firstname" class="p-col-fixed" style="width:150px">Order Status</label>
+                                <div class="p-col">
+                                    <span>: {{data.order.orderState}}</span>
+                                </div>
+                            </div>
+                            <div class="p-field p-grid">
+                                <label for="lastname" class="p-col-fixed" style="width:150px">Created At</label>
+                                <div class="p-col">
+                                    <span>: {{data.order.created | moment("DD-MM-YYYY HH:MM:SS A")}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
                 <Column header="No" headerStyle="width: 50px;text-align:center"
                     bodyStyle="text-align:center">
                     <template #body="slotProps">
@@ -36,14 +96,17 @@
                 </Column>
                 <Column field="quantity" header="Quantity" headerStyle="width: 100px;text-align:right"
                 bodyStyle="text-align:right"></Column>
-                <Column field="unitPrice" header="Price($)" headerStyle="width: 100px;text-align:right"
-                    bodyStyle="text-align:right"></Column>
+                <Column header="Price($)" headerStyle="width: 100px;text-align:right" bodyStyle="text-align:right">
+                    <template #body="slotProps">
+                        {{formatPrice(slotProps.data.unitPrice)}}
+                    </template>
+                </Column>
                 <Column field="product.discount" header="Discount(%)" headerStyle="width: 100px;text-align:right"
                     bodyStyle="text-align:right"></Column>
                 <Column header="Subtotal($)" headerStyle="width: 100px;text-align:right"
                     bodyStyle="text-align:right">
                     <template #body="slotProps">
-                        {{getSubtotal(slotProps.data.quantity,slotProps.data.unitPrice,slotProps.data.product.discount)}}
+                        {{formatPrice(getSubtotal(slotProps.data.quantity,slotProps.data.unitPrice,slotProps.data.product.discount))}}
                     </template>
                 </Column>
                 <!-- <Column header="Action" headerStyle="width: 200px;text-align:center" bodyStyle="text-align:center">
@@ -52,6 +115,28 @@
                         <span class="stage-badge status-waiting">Edit</span>
                     </template>
                 </Column> -->
+
+                <template #footer>
+                    <div class="p-grid p-mt-2">
+                        <div class="p-col">
+                            <div class="p-field p-grid p-text-right">
+                                <div class="p-col">
+                                    <span>Total : {{formatPrice(data.order.total)}}</span>
+                                </div>
+                            </div>
+                            <div class="p-field p-grid p-text-right">
+                                <div class="p-col">
+                                    <span>Total Discount : {{formatPrice(data.order.totalPriceDiscount)}}</span>
+                                </div>
+                            </div>
+                            <div class="p-field p-grid p-text-right">
+                                <div class="p-col">
+                                    <span>Grand Total : {{formatPrice(data.order.grandTotal)}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
             </DataTable>
 
         </div>
