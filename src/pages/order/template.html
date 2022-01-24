@@ -20,21 +20,42 @@
                     </div>
                 </template>
 
-                <Column header="Ref" field="ref"></Column>
+                <Column header="Ref" field="ref" bodyStyle="white-space: nowrap;"></Column>
+                <Column header="Total" headerStyle="text-align:right" bodyStyle="text-align:right">
+                    <template #body="slotProps">
+                        <span>{{formatPrice(slotProps.data.total)}}</span>
+                    </template>
+                </Column>
+                <Column header="Total Discount" headerStyle="text-align:right" bodyStyle="text-align:right">
+                    <template #body="slotProps">
+                        <span>{{formatPrice(slotProps.data.totalPriceDiscount)}}</span>
+                    </template>
+                </Column>
+                <Column header="Grand Total" headerStyle="text-align:right" bodyStyle="text-align:right">
+                    <template #body="slotProps" >
+                        <span>{{formatPrice(slotProps.data.grandTotal)}}</span>
+                    </template>
+                </Column>
                 <Column field="customer.fullName" header="Customer Name"></Column>
-                <Column header="Status" field="orderState"></Column>
                 <Column header="Created At" field="created">
                     <template #body="slotProps">
                         <span>{{slotProps.data.created | moment("DD-MM-YYYY")}}</span>
                     </template>
                 </Column>
-                <Column header="Action" headerStyle="width: 200px;text-align:center" bodyStyle="text-align:center">
+                <Column header="Status" field="orderState" headerStyle="width: 100px;">
+                    <template #body="slotProps">
+                        <span v-if="slotProps.data.orderState == 'PENDING'" class="text-color-warning">Pending</span>
+                        <span v-if="slotProps.data.orderState == 'CANCEL'" class="text-color-danger">Cancel</span>
+                        <span v-if="slotProps.data.orderState == 'COMPLETED'" class="text-color-success">Completed</span>
+                    </template>
+                </Column>
+                <Column header="Action" headerStyle="width: 100px;text-align:center" bodyStyle="text-align:center">
                     <template #body="slotProps">
                         <router-link :to="{name: 'order-detail', params:{id: slotProps.data.id}}" class="stage-badge status-complete p-mr-2">Detail</router-link>
                     </template>
                 </Column>
             </DataTable>
-            <Paginator v-if="!isFetching && data.categories.length > 0" :rows="pagination.size" :totalRecords="pagination.length" @page="onPage($event)"></Paginator>
+            <Paginator v-if="!isFetching && data.orders.length > 0" :rows="pagination.size" :totalRecords="pagination.length" @page="onPage($event)"></Paginator>
 
             <!-- Dialog of Create Category -->
             <Dialog :visible.sync="showCreateCategoryDialog" :style="{width: '450px'}" header="Create Category" :modal="true"

@@ -32,7 +32,7 @@
                 <Column header="Action" headerStyle="width: 200px;text-align:center" bodyStyle="text-align:center">
                     <template #body="slotProps">
                         <span @click="openUpdateDialog(slotProps.index)" class="stage-badge status-waiting" style="float: right;">View</span>
-                        <div v-if="slotProps.data.status" @click="closeQuestion(slotProps.index)" class="stage-badge status-waiting p-mr-2" style="width: 70px;float: right;">Open</div>
+                        <div v-if="!slotProps.data.close" @click="closeQuestion(slotProps.index)" class="stage-badge status-waiting p-mr-2" style="width: 70px;float: right;">Open</div>
                         <div v-else class="stage-badge status-cancel p-mr-2" style="width: 70px;float: right;">Closed</div>
                     </template>
                 </Column>

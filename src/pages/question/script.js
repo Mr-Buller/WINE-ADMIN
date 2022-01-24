@@ -54,7 +54,10 @@ export default {
             QuestionService.getQuestion(params).then((response) => {
 				this.isFetching = false
                 if (response.response && response.response.status == 200) {
-                    this.data.questions = response.results
+					this.data.questions = response.results
+					this.pagination.totalPage = response.totalPage
+					this.pagination.length = response.length
+					this.pagination.page = response.page
                 }
             }).catch(err => { console.log(err) })
 		},
@@ -64,7 +67,7 @@ export default {
             QuestionService.closeQuestion(questionId).then((response) => {
 				this.isFetching = false
                 if (response.response && response.response.status == 200) {
-					this.data.questions[index].status = false
+					this.data.questions[index].close = true
                 }
             }).catch(err => { console.log(err) })
 		},
@@ -114,6 +117,11 @@ export default {
 
 		getFullPathImage(path){
 			return process.env.VUE_APP_BASE_URL+path
-		}
+		},
+
+		onPage(event) {
+			this.pagination.page = event.page
+			this.getQuestion()
+		},
 	}
 }

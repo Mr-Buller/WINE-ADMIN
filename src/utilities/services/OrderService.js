@@ -24,6 +24,16 @@ OrderService.getOrderDetail = async function (orderId){
     })
 };
 
+OrderService.getOrderHistory = async function (orderId){
+    return await axios.get(ApiContant.order+"/"+orderId+"/history",
+        Service.headers())
+    .then((response) => {
+        return Service.validateError(response);
+    }).catch(function (error) {
+        return error.response.data;
+    })
+};
+
 OrderService.confirmOrder = async function (orderId){
     return await axios.put(ApiContant.order+"/"+orderId+"/confirm","",
         Service.headers())

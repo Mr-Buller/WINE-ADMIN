@@ -12,7 +12,6 @@ export default {
 			updateIndex: -1,
 			keySearch: "",
 			data:{
-				categories: [],
 				users: []
 			},
 			category:{
@@ -28,25 +27,28 @@ export default {
 		}
 	},
 	created() {
-		this.getCategory()
+		this.getUser()
 	},
 	watch: {
 		"$route.fullPath": function() {
-			this.getCategory();
+			this.getUser();
 		},
 	},
 	mounted() {
 
 	},
 	methods: {
-		getCategory() {
+		getUser() {
 			let keySearch = this.$route.query.search
 			let params = "?page="+this.pagination.page+"&size="+this.pagination.size
 			if(keySearch){ params = params+"&query="+keySearch }
             UserService.getUser(params).then((response) => {
 				this.isFetching = false
                 if (response.response && response.response.status == 200) {
-                    this.data.users = response.results
+					this.data.users = response.results
+					this.pagination.totalPage = response.totalPage
+					this.pagination.length = response.length
+					this.pagination.page = response.page
                 }
             }).catch(err => { console.log(err) })
 		},
@@ -102,7 +104,12 @@ export default {
 
 		getFullPathImage(path){
 			return process.env.VUE_APP_BASE_URL+path
-		}
+		},
+
+		onPage(event) {
+			this.pagination.page = event.page
+			this.getUser()
+		},
 
 	}
 }

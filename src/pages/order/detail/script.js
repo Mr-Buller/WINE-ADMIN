@@ -7,12 +7,14 @@ export default {
 		return {
 			isFetching: true,
 			data:{
-				order: ""
+				order: "",
+				orderHistories: []
 			}
 		}
 	},
 	created() {
 		this.getOrderDetail()
+		this.getOrderHistory()
 	},
 	watch: {
 		"$route.fullPath": function() {
@@ -29,6 +31,15 @@ export default {
 				this.isFetching = false
                 if (response.response && response.response.status == 200) {
                     this.data.order = response.results
+                }
+            }).catch(err => { console.log(err) })
+		},
+
+		getOrderHistory() {
+			let orderId = this.$route.params.id
+            OrderService.getOrderHistory(orderId).then((response) => {
+                if (response.response && response.response.status == 200) {
+                    this.data.orderHistories = response.results
                 }
             }).catch(err => { console.log(err) })
 		},

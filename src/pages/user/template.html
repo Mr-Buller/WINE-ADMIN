@@ -38,7 +38,7 @@
                     </template>
                 </Column>
             </DataTable>
-            <Paginator v-if="!isFetching && data.categories.length > 0" :rows="pagination.size" :totalRecords="pagination.length" @page="onPage($event)"></Paginator>
+            <Paginator v-if="!isFetching && data.users.length > 0" :rows="pagination.size" :totalRecords="pagination.length" @page="onPage($event)"></Paginator>
 
             <!-- Dialog of Update Category -->
             <Dialog :visible.sync="showUpdateDialog" :style="{width: '450px'}" header="Update User" :modal="true"

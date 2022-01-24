@@ -1,3 +1,4 @@
+import Helper from './../../utilities/Helper'
 import CategoryService from './../../utilities/services/CategoryService';
 import OrderService from './../../utilities/services/OrderService';
 
@@ -47,7 +48,10 @@ export default {
             OrderService.getOrder(params).then((response) => {
 				this.isFetching = false
                 if (response.response && response.response.status == 200) {
-                    this.data.orders = response.results
+					this.data.orders = response.results
+					this.pagination.totalPage = response.totalPage
+					this.pagination.length = response.length
+					this.pagination.page = response.page
                 }
             }).catch(err => { console.log(err) })
 		},
@@ -147,5 +151,14 @@ export default {
 		},
 		
 		fileToPath(file){ return window.URL.createObjectURL(file) },
+
+		formatPrice(price){
+            return Helper.formatPrice(price)
+		},
+		
+		onPage(event) {
+			this.pagination.page = event.page
+			this.getOrder()
+		},
 	}
 }
