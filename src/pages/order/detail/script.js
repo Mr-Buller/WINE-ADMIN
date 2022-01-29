@@ -6,10 +6,13 @@ export default {
 	data() {
 		return {
 			isFetching: true,
+			isUpdating: false,
+			showUpdateStatusDialog: false,
+			updateOrderStatus: "",
 			data:{
 				order: "",
 				orderHistories: []
-			}
+			},
 		}
 	},
 	created() {
@@ -44,11 +47,20 @@ export default {
             }).catch(err => { console.log(err) })
 		},
 
+		confirmUpdateStatus(){
+			this.isUpdating = true
+			if(this.updateOrderStatus == 'confirm'){this.confirmOrder()}
+			if(this.updateOrderStatus == 'cancel'){this.cancelOrder()}
+			if(this.updateOrderStatus == 'complete'){this.completeOrder()}
+		},
+
 		confirmOrder() {
 			let orderId = this.$route.params.id
             OrderService.confirmOrder(orderId).then((response) => {
+				this.isUpdating = false
                 if (response.response && response.response.status == 200) {
-                    this.data.order.orderState = "CONFIRM"
+					this.data.order.orderState = "CONFIRM"
+					this.showUpdateStatusDialog = false
                 }
             }).catch(err => { console.log(err) })
 		},
@@ -56,8 +68,10 @@ export default {
 		cancelOrder() {
 			let orderId = this.$route.params.id
             OrderService.cancelOrder(orderId).then((response) => {
+				this.isUpdating = false
                 if (response.response && response.response.status == 200) {
 					this.data.order.orderState = "CANCEL"
+					this.showUpdateStatusDialog = false
                 }
             }).catch(err => { console.log(err) })
 		},
@@ -65,8 +79,10 @@ export default {
 		completeOrder() {
 			let orderId = this.$route.params.id
             OrderService.completedOrder(orderId).then((response) => {
+				this.isUpdating = false
                 if (response.response && response.response.status == 200) {
-                    this.data.order.orderState = "COMPLETE"
+					this.data.order.orderState = "COMPLETE"
+					this.showUpdateStatusDialog = false
                 }
             }).catch(err => { console.log(err) })
 		},
@@ -83,12 +99,16 @@ export default {
 		getFullPathImage(path){
 			return process.env.VUE_APP_BASE_URL+path
 		},
+
+		displayUpdateOrderStatusDialog(orderStatus){
+			this.updateOrderStatus = orderStatus
+			this.showUpdateStatusDialog = true
+		},
 		
 		fileToPath(file){ return window.URL.createObjectURL(file) },
 
 		formatPrice(price){
             return Helper.formatPrice(price)
         },
-
 	}
 }

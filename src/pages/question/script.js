@@ -12,6 +12,8 @@ export default {
 			showUpdateDialog: false,
 			updateIndex: -1,
 			keySearch: "",
+			showUpdateStatusDialog: false,
+			updateQuestionIndex: -1,
 			data:{
 				questions: []
 			},
@@ -62,12 +64,16 @@ export default {
             }).catch(err => { console.log(err) })
 		},
 
-		closeQuestion(index) {
+		closeQuestion() {
+			let index = this.updateQuestionIndex
+			this.isUpdating = true
 			let questionId = this.data.questions[index].id
             QuestionService.closeQuestion(questionId).then((response) => {
-				this.isFetching = false
+				this.isUpdating = false
                 if (response.response && response.response.status == 200) {
 					this.data.questions[index].close = true
+					this.updateQuestionIndex = -1
+					this.showUpdateStatusDialog = false
                 }
             }).catch(err => { console.log(err) })
 		},
@@ -88,6 +94,11 @@ export default {
 		validateBody(){
 			if(!this.country.name){ return "Country name is required." }
 			return "OK"
+		},
+
+		displayUpdateStatusDialog(questionIndex){
+			this.updateQuestionIndex = questionIndex
+			this.showUpdateStatusDialog = true
 		},
 
 		openCreateDialog() {

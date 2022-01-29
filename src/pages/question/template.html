@@ -12,7 +12,7 @@
                 <ProgressBar v-if="isFetching" mode="indeterminate" style="height: .2rem;"></ProgressBar>
                 <template #header>
                     <div class="table-header">
-                        <h5 class="p-m-0">Question</h5>
+                        <h5 class="p-m-0">Questions</h5>
                         <span class="p-input-icon-left">
                             <i class="pi pi-search" />
                             <InputText @keyup.enter="searchQuestion" v-model="keySearch" placeholder="Search" />
@@ -32,8 +32,8 @@
                 <Column header="Action" headerStyle="width: 200px;text-align:center" bodyStyle="text-align:center">
                     <template #body="slotProps">
                         <span @click="openUpdateDialog(slotProps.index)" class="stage-badge status-waiting" style="float: right;">View</span>
-                        <div v-if="!slotProps.data.close" @click="closeQuestion(slotProps.index)" class="stage-badge status-waiting p-mr-2" style="width: 70px;float: right;">Open</div>
-                        <div v-else class="stage-badge status-cancel p-mr-2" style="width: 70px;float: right;">Closed</div>
+                        <div v-if="!slotProps.data.close" @click="displayUpdateStatusDialog(slotProps.index)" class="stage-badge status-waiting p-mr-2" style="width: 70px;float: right;">Open</div>
+                        <b v-else class="text-color-danger p-mr-2" style="width: 70px;float: right;">Closed</b>
                     </template>
                 </Column>
             </DataTable>
@@ -82,4 +82,16 @@
             </Dialog>
         </div>
     </div>
+
+    <!-- Dialog of Update Status -->
+    <Dialog :visible.sync="showUpdateStatusDialog" :style="{width: '450px'}" header="Confirmation" :modal="true"
+        class="p-fluid">
+        <div class="p-field">
+            <label>Click "Confirm" to close question.</label>
+        </div>
+        <template #footer>
+            <Button v-if="isUpdating" label="Loading..." icon="pi pi-loading" class="p-button-text" />
+            <Button v-else @click="closeQuestion" label="Confirm" icon="pi pi-check" class="p-button-text" />
+        </template>
+    </Dialog>
 </div>

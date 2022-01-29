@@ -4,18 +4,19 @@
             <Toast />
             <Toolbar class="no-bg">
                 <template slot="left">
+                    <router-link :to="{name: 'order'}" class="pi pi-fw pi-arrow-left p-mr-4 pointer"></router-link>
                     <h5 class="p-m-0">Order Ref : {{data.order.ref}}</h5>
                 </template>
                 <template slot="right">
                     <div v-if="data.order.orderState == 'PENDING'">
-                        <span @click="confirmOrder" class="stage-badge status-waiting p-mr-2" style="padding:6px 12px;">Confirm</span>
-                        <span @click="cancelOrder" class="stage-badge status-cancel p-mr-2" style="padding:6px 12px;">Cancel</span>
+                        <span @click="displayUpdateOrderStatusDialog('confirm')" class="stage-badge status-waiting p-mr-2" style="padding:6px 12px;">Confirm</span>
+                        <span @click="displayUpdateOrderStatusDialog('cancel')" class="stage-badge status-cancel p-mr-2" style="padding:6px 12px;">Cancel</span>
                     </div>
                     <div v-if="data.order.orderState == 'CONFIRM'">
-                        <span @click="completeOrder" class="stage-badge status-complete p-mr-2" style="padding:6px 12px;">Complete</span>
-                        <span @click="cancelOrder" class="stage-badge status-cancel p-mr-2" style="padding:6px 12px;">Cancel</span>
+                        <span @click="displayUpdateOrderStatusDialog('complete')" class="stage-badge status-complete p-mr-2" style="padding:6px 12px;">Complete</span>
+                        <span @click="displayUpdateOrderStatusDialog('cancel')" class="stage-badge status-cancel p-mr-2" style="padding:6px 12px;">Cancel</span>
                     </div>
-                    <div v-if="data.order.orderState == 'COMPLETE'">
+                    <div v-if="data.order.orderState == 'COMPLETED'">
                         <span class="text-color-success stage-badge p-mr-2" style="padding:6px 12px;">Completed</span>
                     </div>
                     <div v-if="data.order.orderState == 'CANCEL'">
@@ -157,10 +158,23 @@
                     <template #body="slotProps">
                         <span v-if="slotProps.data.orderState == 'PENDING'" class="text-color-warning">Pending</span>
                         <span v-if="slotProps.data.orderState == 'CANCEL'" class="text-color-danger">Cancel</span>
+                        <span v-if="slotProps.data.orderState == 'CONFIRM'" class="text-color-waiting">Confirm</span>
                         <span v-if="slotProps.data.orderState == 'COMPLETED'" class="text-color-success">Completed</span>
                     </template>
                 </Column>
             </DataTable>
         </div>
     </div>
+
+    <!-- Dialog of Update Status -->
+    <Dialog :visible.sync="showUpdateStatusDialog" :style="{width: '450px'}" header="Confirmation" :modal="true"
+        class="p-fluid">
+        <div class="p-field">
+            <label>Click "Confirm" to {{updateOrderStatus}} order.</label>
+        </div>
+        <template #footer>
+            <Button v-if="isUpdating" label="Loading..." icon="pi pi-loading" class="p-button-text" />
+            <Button v-else @click="confirmUpdateStatus" label="Confirm" icon="pi pi-check" class="p-button-text" />
+        </template>
+    </Dialog>
 </div>
