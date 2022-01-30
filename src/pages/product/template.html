@@ -14,7 +14,7 @@
                 <ProgressBar v-if="isFetching" mode="indeterminate" style="height: .2rem;"></ProgressBar>
                 <template #header>
                     <div class="table-header">
-                        <h5 class="p-m-0">Product</h5>
+                        <h5 class="p-m-0">Products</h5>
                         <span class="p-input-icon-left">
                             <i class="pi pi-search" />
                             <InputText @keyup.enter="searchProduct" v-model="keySearch" placeholder="Search" />
@@ -33,7 +33,12 @@
                 <Column field="name" header="Name"></Column>
                 <Column field="price" header="Price" headerStyle="width: 100px;text-align:right" bodyStyle="text-align:right"></Column>
                 <Column field="discount" header="Discount" headerStyle="width: 100px;text-align:right" bodyStyle="text-align:right"></Column>
-                <Column field="status" header="Status" headerStyle="width: 100px;text-align:center" bodyStyle="text-align:center"></Column>
+                <Column header="Status" headerStyle="width: 100px;text-align:center" bodyStyle="text-align:center">
+                    <template #body="slotProps">
+                        <span v-if="slotProps.data.status" class="text-color-success">Enabled</span>
+                        <span v-else class="text-color-danger">Desabled</span>
+                    </template>
+                </Column>
                 <Column header="Action" headerStyle="width: 100px;text-align:center" bodyStyle="text-align:center">
                     <template #body="slotProps">
                         <router-link :to="{name: 'product-update', params:{id: slotProps.data.id}}" class="stage-badge status-waiting">Edit</router-link>

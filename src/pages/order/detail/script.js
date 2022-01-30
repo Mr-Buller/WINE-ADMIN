@@ -1,17 +1,23 @@
 import OrderService from './../../../utilities/services/OrderService';
+import Helper from './../../../utilities/Helper'
 
 export default {
 	name: "order-detail",
 	data() {
 		return {
 			isFetching: true,
+			isUpdating: false,
+			showUpdateStatusDialog: false,
+			updateOrderStatus: "",
 			data:{
-				order: ""
-			}
+				order: "",
+				orderHistories: []
+			},
 		}
 	},
 	created() {
 		this.getOrderDetail()
+		this.getOrderHistory()
 	},
 	watch: {
 		"$route.fullPath": function() {
@@ -32,6 +38,55 @@ export default {
             }).catch(err => { console.log(err) })
 		},
 
+		getOrderHistory() {
+			let orderId = this.$route.params.id
+            OrderService.getOrderHistory(orderId).then((response) => {
+                if (response.response && response.response.status == 200) {
+                    this.data.orderHistories = response.results
+                }
+            }).catch(err => { console.log(err) })
+		},
+
+		confirmUpdateStatus(){
+			this.isUpdating = true
+			if(this.updateOrderStatus == 'confirm'){this.confirmOrder()}
+			if(this.updateOrderStatus == 'cancel'){this.cancelOrder()}
+			if(this.updateOrderStatus == 'complete'){this.completeOrder()}
+		},
+
+		confirmOrder() {
+			let orderId = this.$route.params.id
+            OrderService.confirmOrder(orderId).then((response) => {
+				this.isUpdating = false
+                if (response.response && response.response.status == 200) {
+					this.data.order.orderState = "CONFIRM"
+					this.showUpdateStatusDialog = false
+                }
+            }).catch(err => { console.log(err) })
+		},
+
+		cancelOrder() {
+			let orderId = this.$route.params.id
+            OrderService.cancelOrder(orderId).then((response) => {
+				this.isUpdating = false
+                if (response.response && response.response.status == 200) {
+					this.data.order.orderState = "CANCEL"
+					this.showUpdateStatusDialog = false
+                }
+            }).catch(err => { console.log(err) })
+		},
+
+		completeOrder() {
+			let orderId = this.$route.params.id
+            OrderService.completedOrder(orderId).then((response) => {
+				this.isUpdating = false
+                if (response.response && response.response.status == 200) {
+					this.data.order.orderState = "COMPLETE"
+					this.showUpdateStatusDialog = false
+                }
+            }).catch(err => { console.log(err) })
+		},
+
 		getSubtotal(qty,price,discount){
 			qty = parseInt(qty)
 			price = parseFloat(price)
@@ -44,8 +99,16 @@ export default {
 		getFullPathImage(path){
 			return process.env.VUE_APP_BASE_URL+path
 		},
-		
-		fileToPath(file){ return window.URL.createObjectURL(file) }
 
+		displayUpdateOrderStatusDialog(orderStatus){
+			this.updateOrderStatus = orderStatus
+			this.showUpdateStatusDialog = true
+		},
+		
+		fileToPath(file){ return window.URL.createObjectURL(file) },
+
+		formatPrice(price){
+            return Helper.formatPrice(price)
+        },
 	}
 }

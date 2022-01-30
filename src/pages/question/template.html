@@ -1,0 +1,97 @@
+<div class="p-grid crud-demo">
+    <div class="p-col-12">
+        <div class="card p-p-0">
+            <Toast />
+            <Toolbar class="no-bg">
+                <template slot="right">
+                    <Button label="New" icon="pi pi-plus" class="p-button-success" @click="openCreateDialog" />
+                </template>
+            </Toolbar>
+
+            <DataTable :value="data.questions" dataKey="id" class="p-datatable-sm">
+                <ProgressBar v-if="isFetching" mode="indeterminate" style="height: .2rem;"></ProgressBar>
+                <template #header>
+                    <div class="table-header">
+                        <h5 class="p-m-0">Questions</h5>
+                        <span class="p-input-icon-left">
+                            <i class="pi pi-search" />
+                            <InputText @keyup.enter="searchQuestion" v-model="keySearch" placeholder="Search" />
+                        </span>
+                    </div>
+                </template>
+
+                <Column header="ID" field="id" 
+                    headerStyle="width: 50px;text-align:center" 
+                    bodyStyle="text-align:center"></Column>
+                <Column field="name" header="Name" 
+                    style="text-align: center;"></Column>
+                <Column field="email" header="Email" 
+                    style="text-align: center;"></Column>
+                <Column field="phone" header="Phone" 
+                    style="text-align: center;"></Column>
+                <Column header="Action" headerStyle="width: 200px;text-align:center" bodyStyle="text-align:center">
+                    <template #body="slotProps">
+                        <span @click="openUpdateDialog(slotProps.index)" class="stage-badge status-waiting" style="float: right;">View</span>
+                        <div v-if="!slotProps.data.close" @click="displayUpdateStatusDialog(slotProps.index)" class="stage-badge status-waiting p-mr-2" style="width: 70px;float: right;">Open</div>
+                        <b v-else class="text-color-danger p-mr-2" style="width: 70px;float: right;">Closed</b>
+                    </template>
+                </Column>
+            </DataTable>
+            <Paginator v-if="!isFetching && data.questions.length > 0" :rows="pagination.size" :totalRecords="pagination.length" @page="onPage($event)"></Paginator>
+
+            <!-- Dialog of Create Country -->
+            <Dialog :visible.sync="showCreateDialog" :style="{width: '450px'}" header="Create Country" :modal="true"
+                class="p-fluid">
+                <div class="p-field">
+                    <label for="name">Country Name</label>
+                    <InputText id="name" v-model.trim="country.name" required="true" autofocus/>
+                </div>
+                <template #footer>
+                    <Button v-if="isCreating" label="Loading.." icon="pi pi-loading" class="p-button-text" />
+                    <Button v-else @click="createCountry" label="Save" icon="pi pi-check" class="p-button-text" />
+                </template>
+            </Dialog>
+
+            <!-- Dialog of Update Country -->
+            <Dialog :visible.sync="showUpdateDialog" :style="{width: '450px'}" header="Detail" :modal="true"
+                class="p-fluid">
+                <div class="p-field">
+                    <b>Name</b>
+                    <span style="float: right;">{{question.name}}</span>
+                </div>
+                <div class="p-field">
+                    <b>Email</b>
+                    <span style="float: right;">{{question.email}}</span>
+                </div>
+                <div class="p-field">
+                    <b>Phone</b>
+                    <span style="float: right;">{{question.phone}}</span>
+                </div>
+                <div class="p-field">
+                    <b>Status</b>
+                    <span v-if="question.status" class="text-color-success" style="float: right;">Open</span>
+                    <span v-else class="text-color-danger" style="float: right;">Closed</span>
+                </div>
+                <div class="p-field">
+                    <b>Message</b>
+                    <span style="float: right;">{{question.message}}</span>
+                </div>
+                <template #footer>
+                    
+                </template>
+            </Dialog>
+        </div>
+    </div>
+
+    <!-- Dialog of Update Status -->
+    <Dialog :visible.sync="showUpdateStatusDialog" :style="{width: '450px'}" header="Confirmation" :modal="true"
+        class="p-fluid">
+        <div class="p-field">
+            <label>Click "Confirm" to close question.</label>
+        </div>
+        <template #footer>
+            <Button v-if="isUpdating" label="Loading..." icon="pi pi-loading" class="p-button-text" />
+            <Button v-else @click="closeQuestion" label="Confirm" icon="pi pi-check" class="p-button-text" />
+        </template>
+    </Dialog>
+</div>

@@ -1,6 +1,7 @@
 import UploadService from './../../utilities/services/UploadService';
 import BrandService from './../../utilities/services/BrandService';
 import Helper from './../../utilities/Helper'
+import Toast from 'primevue/toast';
 
 export default {
 	name: "brand",
@@ -15,13 +16,14 @@ export default {
 			updateIndex: -1,
 			keySearch: "",
 			data:{
-				categories: []
+				brands: []
 			},
 			brand:{
 				id: -1,
 				imageFile : "",
 				image: "",
-				name: ""
+				name: "",
+				enabled: false
 			},
 			pagination:{
 				page : 0,
@@ -39,6 +41,9 @@ export default {
 			this.getBrand();
 		},
 	},
+	components:{
+		Toast
+	},
 	mounted() {
 
 	},
@@ -50,9 +55,24 @@ export default {
             BrandService.getBrand(params).then((response) => {
 				this.isFetching = false
                 if (response.response && response.response.status == 200) {
-                    this.data.categories = response.results
+					this.data.brands = response.results
+					this.pagination.totalPage = response.totalPage
+					this.pagination.length = response.length
+					this.pagination.page = response.page
                 }
             }).catch(err => { console.log(err) })
+		},
+
+		updateBrandStatus(index){
+			this.updateIndex = index
+			let brand = this.data.brands[index]
+			this.brand = {
+				id: brand.id,
+				name: brand.name,
+				image: brand.logo,
+				enabled: brand.enabled
+			}
+			this.updateBrand()
 		},
 		
 		async searchBrand(){
@@ -107,12 +127,12 @@ export default {
 				let body = {
 					name: this.brand.name,
 					logo: this.brand.image,
-					status: true
+					enabled: true
 				}
 				BrandService.createBrand(body).then((response) => {
 					this.isCreating = false
 					if (response.response && response.response.status == 200) {
-						this.data.categories.push(response.results)
+						this.data.brands.push(response.results)
 						this.hideDialog()
 					}
 				}).catch(err => { console.log(err) })
@@ -129,17 +149,17 @@ export default {
 					id: this.brand.id,
 					name: this.brand.name,
 					logo: this.brand.image,
-					status: true
+					enabled: this.brand.enabled
 				}
 				BrandService.updateBrand(body).then((response) => {
 					this.isUpdating = false
 					if (response.response && response.response.status == 200) {
-						this.data.categories[this.updateIndex] = response.results
+						this.data.brands[this.updateIndex] = response.results
 						this.hideDialog()
 					}
 				}).catch(err => { console.log(err) })
 			}else{
-				this.$toasted.show(msgValidation);
+				this.$toast.add({severity:'error', summary: 'Error Message', detail:msgValidation, life: 3000});
 			}
 		},
 
@@ -154,11 +174,12 @@ export default {
 
 		openUpdateDialog(index) {
 			this.updateIndex = index
-			let brand = this.data.categories[index]
+			let brand = this.data.brands[index]
 			this.brand = {
 				id: brand.id,
 				name: brand.name,
-				image: brand.logo
+				image: brand.logo,
+				enabled: brand.enabled
 			}
 			this.showUpdateDialog = true
 		},
@@ -199,6 +220,11 @@ export default {
 
 		getFullPathImage(path){
 			return process.env.VUE_APP_BASE_URL+path
-		}
+		},
+
+		onPage(event) {
+			this.pagination.page = event.page
+			this.getBrand()
+		},
 	}
 }

@@ -51,6 +51,7 @@ export default {
                 {label: 'User', icon: 'pi pi-fw pi-user', to: '/user', items: null},
                 {label: 'Role', icon: 'pi pi-fw pi-list', to: '/role', items: null},
                 {label: 'Slide', icon: 'pi pi-fw pi-image', to: '/slide', items: null},
+                {label: 'Question', icon: 'pi pi-fw pi-question', to: '/question', items: null},
                 {label: 'Country', icon: 'pi pi-fw pi-list', to: '/country', items: null},
                 {label: 'Contact Us', icon: 'pi pi-fw pi-info', to: '/contact-us', items: null},
 				// {

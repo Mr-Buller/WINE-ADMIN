@@ -61,6 +61,10 @@ const ApiContant = {
 
     // Contact
     contact: baseUrl + v1 + '/contact-us',
+
+    // Question
+    question: baseUrl + v1 + '/question',
+    listQuestion: baseUrl + v1 + '/question/list',
 }
 
 export default ApiContant;

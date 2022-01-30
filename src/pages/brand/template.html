@@ -8,11 +8,11 @@
                 </template>
             </Toolbar>
 
-            <DataTable :value="data.categories" dataKey="id" class="p-datatable-sm">
+            <DataTable :value="data.brands" dataKey="id" class="p-datatable-sm">
                 <ProgressBar v-if="isFetching" mode="indeterminate" style="height: .2rem;"></ProgressBar>
                 <template #header>
                     <div class="table-header">
-                        <h5 class="p-m-0">Brand</h5>
+                        <h5 class="p-m-0">Brands</h5>
                         <span class="p-input-icon-left">
                             <i class="pi pi-search" />
                             <InputText @keyup.enter="searchBrand" v-model="keySearch" placeholder="Search" />
@@ -30,13 +30,18 @@
                 </Column>
                 <Column field="name" header="Name" 
                     style="text-align: center;"></Column>
-                <Column header="Action" headerStyle="width: 200px;text-align:center" bodyStyle="text-align:center">
+                <Column field="enabled" header="Status" headerStyle="width: 100px;text-align:center" bodyStyle="text-align:center">
+                    <template #body="slotProps">
+                        <InputSwitch @change="updateBrandStatus(slotProps.index)" v-model="slotProps.data.enabled" />
+                    </template>
+                </Column>
+                <Column header="Action" headerStyle="width: 100px;text-align:center" bodyStyle="text-align:center">
                     <template #body="slotProps">
                         <span @click="openUpdateDialog(slotProps.index)" class="stage-badge status-waiting">Edit</span>
                     </template>
                 </Column>
             </DataTable>
-            <Paginator v-if="!isFetching && data.categories.length > 0" :rows="pagination.size" :totalRecords="pagination.length" @page="onPage($event)"></Paginator>
+            <Paginator v-if="!isFetching && data.brands.length > 0" :rows="pagination.size" :totalRecords="pagination.length" @page="onPage($event)"></Paginator>
 
             <!-- Dialog of Create Brand -->
             <Dialog :visible.sync="showCreateDialog" :style="{width: '450px'}" header="Create Brand" :modal="true"

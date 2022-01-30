@@ -16,7 +16,7 @@
                 <ProgressBar v-if="isFetching" mode="indeterminate" style="height: .2rem;"></ProgressBar>
                 <template #header>
                     <div class="table-header">
-                        <h5 class="p-m-0">Customer</h5>
+                        <h5 class="p-m-0">Customers</h5>
                         <span class="p-input-icon-left">
                             <i class="pi pi-search" />
                             <InputText @keyup.enter="searchCustomer" v-model="keySearch" placeholder="Search..." />
@@ -70,7 +70,10 @@
                 </div>
                 <div class="p-grid p-mb-2">
                     <div class="p-col"><b>Status</b></div>
-                    <div class="p-col p-text-right">{{data.customer.status}}</div>
+                    <div class="p-col p-text-right">
+                        <b v-if="data.customer.status" class="text-color-success">Enabled</b>
+                        <b v-else class="text-color-danger">Disabled</b>
+                    </div>
                 </div>
                 <div class="p-grid p-mb-2">
                     <div class="p-col"><b>Created At</b></div>

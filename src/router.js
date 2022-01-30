@@ -23,6 +23,8 @@ import OrderDetail from './pages/order/detail'
 import Country from './pages/country'
 import ContactUs from './pages/contact-us'
 
+import Question from './pages/question'
+
 
 const isLoggedIn = (to, from, next) => {
 	if (!Vue.$cookies.get('token')) {
@@ -56,6 +58,7 @@ const routes = [
   { path: '/order/:id',name: 'order-detail', component: OrderDetail, beforeEnter: isLoggedIn },
   { path: '/country',name: 'country', component: Country, beforeEnter: isLoggedIn },
   { path: '/contact-us',name: 'contact-us', component: ContactUs, beforeEnter: isLoggedIn },
+  { path: '/question',name: 'question', component: Question , beforeEnter: isLoggedIn },
 ]
 
 const router = new VueRouter({
