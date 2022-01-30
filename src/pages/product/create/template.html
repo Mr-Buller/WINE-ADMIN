@@ -29,7 +29,15 @@
                             <label for="discount">Discount</label>
                             <InputNumber v-model="product.discount" id="discount"/>
                         </div>
-                        <div class="p-field p-col-12 p-md-4">
+                        <div class="p-field p-col-12 p-md-3">
+                            <label for="country">Country</label>
+                            <Dropdown v-model="product.countryId" 
+                                :options="data.countries" 
+                                optionValue="id" 
+                                optionLabel="name"
+                                id="country" />
+                        </div>
+                        <div class="p-field p-col-12 p-md-3">
                             <label for="category">Category</label>
                             <Dropdown v-model="product.categoryId" 
                                 :options="data.categories" 
@@ -37,7 +45,7 @@
                                 optionLabel="name"
                                 id="category" />
                         </div>
-                        <div class="p-field p-col-12 p-md-4">
+                        <div class="p-field p-col-12 p-md-3">
                             <label for="state">Brand</label>
                             <Dropdown v-model="product.brandId" 
                                 :options="data.brands" 
@@ -45,7 +53,7 @@
                                 optionLabel="name"
                                 id="brand" />
                         </div>
-                        <div class="p-field p-col-12 p-md-4">
+                        <div class="p-field p-col-12 p-md-3">
                             <label for="status">Status</label>
                             <Dropdown v-model="product.status" 
                                 :options="status" 

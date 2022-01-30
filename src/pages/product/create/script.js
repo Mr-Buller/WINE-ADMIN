@@ -1,6 +1,7 @@
 
 import CategoryService from './../../../utilities/services/CategoryService'
 import BrandService from './../../../utilities/services/BrandService'
+import CountryService from './../../../utilities/services/CountryService'
 import UploadService from './../../../utilities/services/UploadService'
 import Helper from './../../../utilities/Helper'
 import ProductService from '../../../utilities/services/ProductService'
@@ -13,7 +14,8 @@ export default {
 			isUploadingImage: false,
 			data: {
 				categories: [],
-				brands: []
+				brands: [],
+				countries: []
 			},
 			product: {
 				imageFile: "",
@@ -23,6 +25,7 @@ export default {
 				discount: 0,
 				photos: "",
 				categoryId: "",
+				countryId: "",
 				brandId: "",
 				status: true,
 				description: "",
@@ -37,6 +40,7 @@ export default {
 	created() {
 		this.getCategory()
 		this.getBrand()
+		this.getCountry()
 	},
 	mounted() {
 
@@ -64,6 +68,16 @@ export default {
 			}).catch(err => { console.log(err) })
 		},
 
+		getCountry() {
+			let params = "?page=0&size=100"
+			CountryService.getCountry(params).then((response) => {
+				if (response.response && response.response.status == 200) {
+					this.data.countries = response.results
+					this.product.countryId = response.results[0].id
+				}
+			}).catch(err => { console.log(err) })
+		},
+
 		async validateBeforeCreate() {
 			this.isCreating = true
 			if (this.product.imageFile) {
@@ -85,6 +99,7 @@ export default {
 					"thumbnail": this.product.image,
 					"photos": this.product.image,
 					"category": { "id": this.product.categoryId },
+					"country": { "id": this.product.countryId },
 					"brand": { "id": this.product.brandId },
 					"status": this.product.status,
 					"description": this.product.description,
@@ -119,6 +134,7 @@ export default {
 			if (!this.product.price) { return "Price is required." }
 			if (!this.product.discount.length == 0) { return "Discount is required." }
 			if (!this.product.categoryId) { return "Category is required." }
+			if (!this.product.countryId) { return "Country is required." }
 			if (!this.product.brandId) { return "Brand is required." }
 			return "OK"
 		},
