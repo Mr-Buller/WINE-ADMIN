@@ -4,11 +4,22 @@
 			<span class="pi pi-bars"></span>
 		</button>
 		<div class="layout-topbar-icons">
-			<button @click="logout" class="p-link">
+			<button @click="showLogoutDialog = true" class="p-link">
 				<span class="layout-topbar-item-text">User</span>
-				<span class="layout-topbar-icon pi pi-user"></span>
+				<span class="layout-topbar-icon pi pi-sign-out"></span>
 			</button>
 		</div>
+
+		<!-- Dialog of Logout -->
+		<Dialog :visible.sync="showLogoutDialog" :style="{width: '450px'}" header="Confirmation" :modal="true"
+			class="p-fluid">
+			<div class="p-field">
+				<label>Are you sure want to log out?</label>
+			</div>
+			<template #footer>
+				<Button @click="logout" label="Log out" class="p-button-text" />
+			</template>
+		</Dialog>
 	</div>
 </template>
 
@@ -24,6 +35,7 @@ export default {
 			currentBusiness: "",
 			submitted: false,
 			businessDialog: false,
+			showLogoutDialog: false,
 			userInfo: "",
 			branches: [],
 			popupshow : {

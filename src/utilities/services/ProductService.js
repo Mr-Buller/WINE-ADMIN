@@ -78,4 +78,26 @@ ProductService.getProductVariant = async function (productId){
     })
 };
 
+ProductService.disableProduct = async function (productId) {
+    return await axios.put(ApiContant.product+"/"+productId+"/disable",
+        "",
+        Service.headers())
+    .then((response) => {
+        return Service.validateError(response);
+    }).catch(function (error) {
+        return error.response.data;
+    })
+};
+
+ProductService.enableProduct = async function (productId) {
+    return await axios.put(ApiContant.product+"/"+productId+"/enable",
+        "",
+        Service.headers())
+    .then((response) => {
+        return Service.validateError(response);
+    }).catch(function (error) {
+        return error.response.data;
+    })
+};
+
 export default ProductService;

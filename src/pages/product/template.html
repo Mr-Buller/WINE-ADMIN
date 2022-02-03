@@ -31,12 +31,25 @@
                     </template>
                 </Column>
                 <Column field="name" header="Name"></Column>
-                <Column field="price" header="Price" headerStyle="width: 100px;text-align:right" bodyStyle="text-align:right"></Column>
-                <Column field="discount" header="Discount" headerStyle="width: 100px;text-align:right" bodyStyle="text-align:right"></Column>
-                <Column header="Status" headerStyle="width: 100px;text-align:center" bodyStyle="text-align:center">
+                <Column header="Price" headerStyle="width: 100px;text-align:right" bodyStyle="text-align:right">
+                    <template #body="slotProps">
+                        <span>{{formatPrice(slotProps.data.price)}}</span>
+                    </template>
+                </Column>
+                <Column field="discount" header="Discount" headerStyle="width: 100px;text-align:right" bodyStyle="text-align:right">
+                    <template #body="slotProps">
+                        <span>{{slotProps.data.discount}}%</span>
+                    </template>
+                </Column>
+                <!-- <Column header="Status" headerStyle="width: 100px;text-align:center" bodyStyle="text-align:center">
                     <template #body="slotProps">
                         <span v-if="slotProps.data.status" class="text-color-success">Enabled</span>
                         <span v-else class="text-color-danger">Desabled</span>
+                    </template>
+                </Column> -->
+                <Column field="enabled" header="Enabled" headerStyle="width: 100px;text-align:center" bodyStyle="text-align:center">
+                    <template #body="slotProps">
+                        <InputSwitch @change="diableOrEnableProduct(slotProps.index)" v-model="slotProps.data.enabled" />
                     </template>
                 </Column>
                 <Column header="Action" headerStyle="width: 100px;text-align:center" bodyStyle="text-align:center">

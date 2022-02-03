@@ -138,7 +138,7 @@ export default {
 					"category": { "id": this.product.categoryId },
 					"country": { "id": this.product.countryId },
 					"brand": { "id": this.product.brandId },
-					"status": this.product.status
+					// "status": this.product.status
 				}
 				ProductService.updateProduct(body).then((response) => {
 					this.isUpdating = false
