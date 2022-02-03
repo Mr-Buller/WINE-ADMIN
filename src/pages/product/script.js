@@ -148,6 +148,33 @@ export default {
 			}
 		},
 
+		diableOrEnableProduct(index){
+			let enabled = this.data.products[index].enabled
+			if(enabled){
+				this.enableProduct(index)
+			}else{
+				this.disableProduct(index)
+			}
+		},
+
+		disableProduct(index){
+			let productId = this.data.products[index].id
+			ProductService.disableProduct(productId).then((response) => {
+				if (response.response && response.response.status == 200) {
+					this.data.products[index].enabled = false
+				}
+			}).catch(err => { console.log(err) })
+		},
+
+		enableProduct(index){
+			let productId = this.data.products[index].id
+			ProductService.enableProduct(productId).then((response) => {
+				if (response.response && response.response.status == 200) {
+					this.data.products[index].enabled = true
+				}
+			}).catch(err => { console.log(err) })
+		},
+
 		validateBody(){
 			if(!this.brand.name){ return "Name is required." }
 			return "OK"
@@ -205,6 +232,10 @@ export default {
 		getFullPathImage(path){
 			return process.env.VUE_APP_BASE_URL+path
 		},
+
+		formatPrice(price){
+            return Helper.formatPrice(price)
+        },
 
 		onPage(event) {
 			this.pagination.page = event.page
