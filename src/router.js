@@ -13,6 +13,10 @@ import Product from './pages/product'
 import CreateProduct from './pages/product/create'
 import UpdateProduct from './pages/product/update'
 
+import Discount from './pages/discount'
+import CreateDiscount from './pages/discount/create'
+import UpdateDiscount from './pages/discount/update'
+
 import Category from './pages/category'
 import Brand from './pages/brand'
 import Slide from './pages/slide'
@@ -53,6 +57,9 @@ const routes = [
   { path: '/product',name: 'product', component: Product, beforeEnter: isLoggedIn },
   { path: '/product/create',name: 'product-create', component: CreateProduct, beforeEnter: isLoggedIn },
   { path: '/product/update/:id',name: 'product-update', component: UpdateProduct, beforeEnter: isLoggedIn },
+  { path: '/discount',name: 'discount', component: Discount, beforeEnter: isLoggedIn },
+  { path: '/discount/create',name: 'discount-create', component: CreateDiscount, beforeEnter: isLoggedIn },
+  { path: '/discount/update/:id',name: 'discount-update', component: UpdateDiscount, beforeEnter: isLoggedIn },
   { path: '/user',name: 'user', component: User, beforeEnter: isLoggedIn },
   { path: '/order',name: 'order', component: Order, beforeEnter: isLoggedIn },
   { path: '/order/:id',name: 'order-detail', component: OrderDetail, beforeEnter: isLoggedIn },

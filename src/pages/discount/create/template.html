@@ -1,0 +1,85 @@
+<div class="p-grid crud-demo">
+    <div class="p-col-12">
+        <div class="card p-p-0">
+            <Toast />
+            <Toolbar class="no-bg">
+                <template slot="left">
+                    <router-link :to="{name: 'discount'}" class="pi pi-fw pi-arrow-left p-mr-4 pointer"></router-link>
+                    <h5 class="p-m-0">Create Discount</h5>
+                </template>
+            </Toolbar>
+
+            <div class="card">
+                <div class="p-col">
+                    <div class="p-field">
+                        <label for="choose-image" class="pointer">
+                            <img :src="discount.imageFile ? fileToPath(discount.imageFile) : discount.image ? getFullPathImage(discount.image) : require('@/assets/logo.png')" class="product-image" />
+                        </label>
+                        <input @change="chooseImage($event)" hidden id="choose-image" type="file" accept="image/*" />
+                    </div>
+                    <div class="p-fluid p-formgrid p-grid">
+                        <div class="p-field p-col-12 p-md-12">
+                            <label for="title">Title</label>
+                            <InputText v-model="discount.title" id="title" type="text" />
+                        </div>
+                        <div class="p-field p-col-12 p-md-8">
+                            <label for="sub-title">Sub Title</label>
+                            <InputText v-model="discount.subTitle" id="sub-title" type="text" />
+                        </div>
+                        <div class="p-field p-col-12 p-md-4">
+                            <label for="sub-title">Daterange</label></span>
+                            <Calendar v-model="discount.dateRange" dateFormat="yy-mm-dd" selectionMode="range" />
+                        </div>
+                        <div class="p-field p-col-12">
+                            <label for="shortDescription">Description</label>
+                            <Textarea v-model="discount.description" :autoResize="true" rows="5" cols="30" />
+                        </div>
+                    </div>
+                    <div class="p-fluid p-formgrid p-grid">
+                        <div class="p-field p-col-12 p-md-5">
+                            <label for="title">Select Product</label>
+                            <InputText v-model="searchProductKey" @keyup="searchProduct" type="text" />
+                            <div style="width: 100%;max-height:200px;border: 1px solid #ddd;overflow-y: auto;">
+                                <div v-for="(product,productIndex) in data.products" 
+                                    :key="(product,productIndex)" 
+                                    @click="chooseProduct(productIndex)"
+                                    :class="checkProductIsSelected(product.id) ? 'product-item-active' : 'product-item'">
+                                    <img :src="getFullPathImage(product.photos)" style="width: 36px;height:36px;border-radius: 4px;object-fit: cover;position: absolute;top:6px;left:6px" />
+                                    <p style="margin-top: 6px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" :title="product.name">{{product.name}}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-field p-col-12 p-md-7">
+                            <label for="title">Product Selected</label>
+                            <DataTable :value="productSelected" dataKey="id" class="p-datatable-sm">
+                                <Column header="ID" field="product.id" 
+                                    headerStyle="width: 50px;text-align:center" 
+                                    bodyStyle="text-align:center"></Column>
+                                <Column header="Image" headerStyle="width:70px">
+                                    <template #body="slotProps">
+                                        <img :src="getFullPathImage(slotProps.data.product.thumbnail)" style="width: 36px;height: 36px;object-fit: cover;" />
+                                    </template>
+                                </Column>
+                                <Column field="product.name" header="Name"></Column>
+                                <Column header="Discount(%)" headerStyle="width: 100px;text-align:right" bodyStyle="text-align:right">
+                                    <template #body="slotProps">
+                                        <InputNumber v-model="slotProps.data.percentage" />
+                                    </template>
+                                </Column>
+                                <Column header="Action" headerStyle="width: 100px;text-align:center" bodyStyle="text-align:center">
+                                    <template #body="slotProps">
+                                        <span @click="removeProductSelected(slotProps.index)" class="stage-badge status-cancel">Remove</span>
+                                    </template>
+                                </Column>
+                            </DataTable>
+                        </div>
+                    </div>
+                    <!-- <Button label="Back" icon="pi pi-angle-left" class="p-button-secondary p-mr-2" @click="$router.go(-1)" /> -->
+                    <Button v-if="!isCreating" label="Create" icon="pi pi-bookmark" class="p-mr-2" @click="validateBeforeCreate" />
+                    <Button v-else label="Loading" icon="pi pi-spin pi-spinner" class="p-mr-2"/>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>

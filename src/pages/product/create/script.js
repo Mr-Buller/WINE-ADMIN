@@ -112,6 +112,7 @@ export default {
 					}
 				}).catch(err => { console.log(err) })
 			} else {
+				this.isCreating = false
 				alert(msgValidation);
 			}
 		},
@@ -119,7 +120,7 @@ export default {
 		async uploadImage(file) {
 			let formData = new FormData()
 			formData.append("file", file)
-			await UploadService.uploadMedia("brand", formData)
+			await UploadService.uploadMedia("product", formData)
 				.then((response) => {
 					if (response.response && response.response.status == 200) {
 						this.isUploadingImage = false

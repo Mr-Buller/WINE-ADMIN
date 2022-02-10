@@ -51,7 +51,7 @@
                 </Column>
                 <Column header="Action" headerStyle="width: 100px;text-align:center" bodyStyle="text-align:center">
                     <template #body="slotProps">
-                        <router-link :to="{name: 'order-detail', params:{id: slotProps.data.id}}" class="stage-badge status-complete p-mr-2">Detail</router-link>
+                        <router-link :to="{name: 'order-detail', params:{id: slotProps.data.id}}" class="stage-badge status-waiting p-mr-2">Detail</router-link>
                     </template>
                 </Column>
             </DataTable>

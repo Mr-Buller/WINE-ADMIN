@@ -16,7 +16,8 @@ export default {
 			},
 			country:{
 				id: -1,
-				name: ""
+				name: "",
+				enabled: false
 			},
 			pagination:{
 				page : 0,
@@ -86,6 +87,17 @@ export default {
 			}
 		},
 
+		updateCountryStatus(index){
+			this.updateIndex = index
+			let country = this.data.countries[index]
+			this.country = {
+				id: country.id,
+				name: country.name,
+				enabled: country.enabled
+			}
+			this.updateCountry()
+		},
+
 		updateCountry() {
 			let msgValidation = this.validateBody()
 			if(msgValidation == "OK"){
@@ -93,7 +105,7 @@ export default {
 				let body = {
 					id: this.country.id,
 					name: this.country.name,
-					status: true
+					enabled: this.country.enabled
 				}
 				CountryService.updateCountry(body).then((response) => {
 					this.isUpdating = false
@@ -122,6 +134,7 @@ export default {
 			this.country = {
 				id: country.id,
 				name: country.name,
+				enabled: country.enabled
 			}
 			this.showUpdateDialog = true
 		},

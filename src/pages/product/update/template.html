@@ -73,7 +73,7 @@
                             </div>
                         </div>
                         <!-- <Button label="Back" icon="pi pi-angle-left" class="p-button-secondary p-mr-2" @click="$router.go(-1)" /> -->
-                        <Button v-if="!isUpdating" label="Update" icon="pi pi-bookmark" class="p-mr-2" @click="validateBeforeUpdate" />
+                        <Button v-if="!isUpdating" @click="validateBeforeUpdate" label="Update" icon="pi pi-bookmark" class="p-mr-2" />
                         <Button v-else label="Loading" icon="pi pi-spin pi-spinner" class="p-mr-2"/>
                     </div>
                 </TabPanel>

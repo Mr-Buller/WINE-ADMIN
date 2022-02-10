@@ -44,6 +44,7 @@ export default {
             menu : [
                 {label: 'Dashboard', icon: 'pi pi-fw pi-chart-bar', to: '/', items: null},
                 {label: 'Product', icon: 'pi pi-fw pi-inbox', to: '/product', items: null},
+                {label: 'Discount', icon: 'pi pi-fw pi-dollar', to: '/discount', items: null},
                 {label: 'Category', icon: 'pi pi-fw pi-sitemap', to: '/category', items: null},
                 {label: 'Brand', icon: 'pi pi-fw pi-clone', to: '/brand', items: null},
                 {label: 'Order', icon: 'pi pi-fw pi-shopping-cart', to: '/order', items: null},

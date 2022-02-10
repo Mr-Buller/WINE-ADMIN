@@ -10,6 +10,11 @@ const ApiContant = {
     product : baseUrl + v1 + '/product',
     updateProduct : baseUrl + v1 + '/product/update',
 
+    // Discount
+    listDiscount : baseUrl + v1 + '/discount/list',
+    discount : baseUrl + v1 + '/discount',
+    updateDiscount : baseUrl + v1 + '/discount/update',
+
     // Variant
     variant : baseUrl + v1 + '/product/product-variant/product',
     updateVariant : baseUrl + v1 + '/product/product-variant/combination/update',

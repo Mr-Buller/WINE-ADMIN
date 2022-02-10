@@ -1,0 +1,54 @@
+<div class="p-grid crud-demo">
+    <div class="p-col-12">
+        <div class="card p-p-0">
+            <Toast />
+            <Toolbar class="no-bg">
+                <template slot="right">
+                    <router-link :to="{name: 'discount-create'}">
+                        <Button label="New" icon="pi pi-plus" class="p-button-success p-mr-2" />
+                    </router-link>
+                </template>
+            </Toolbar>
+
+            <DataTable :value="data.discounts" dataKey="id" class="p-datatable-sm">
+                <ProgressBar v-if="isFetching" mode="indeterminate" style="height: .2rem;"></ProgressBar>
+                <template #header>
+                    <div class="table-header">
+                        <h5 class="p-m-0">Discounts</h5>
+                        <span class="p-input-icon-left">
+                            <i class="pi pi-search" />
+                            <InputText @keyup.enter="searchProduct" v-model="keySearch" placeholder="Search" />
+                        </span>
+                    </div>
+                </template>
+
+                <Column header="ID" field="id" 
+                    headerStyle="width: 50px;text-align:center" 
+                    bodyStyle="text-align:center"></Column>
+                <Column header="Image" headerStyle="width:100px">
+                    <template #body="slotProps">
+                        <img v-if="slotProps.data.thumbnail" :src="getFullPathImage(slotProps.data.thumbnail)" style="width: 36px;height: 36px;object-fit: cover;" />
+                        <img v-else :src="require('@/assets/images/default.jpeg')" style="width: 36px;height: 36px;object-fit: cover;" />
+                    </template>
+                </Column>
+                <Column field="title" header="Title"></Column>
+                <Column header="Start Date" headerStyle="width: 150px;">
+                    <template #body="slotProps">
+                        <span>{{slotProps.data.startDate | moment("DD-MM-YYYY")}}</span>
+                    </template>
+                </Column>
+                <Column header="End Date" headerStyle="width: 150px;">
+                    <template #body="slotProps">
+                        <span>{{slotProps.data.endDate | moment("DD-MM-YYYY")}}</span>
+                    </template>
+                </Column>
+                <Column header="Action" headerStyle="width: 100px;text-align:center" bodyStyle="text-align:center">
+                    <template #body="slotProps">
+                        <router-link :to="{name: 'discount-update', params:{id: slotProps.data.id}}" class="stage-badge status-waiting">Edit</router-link>
+                    </template>
+                </Column>
+            </DataTable>
+            <Paginator v-if="!isFetching && data.discounts.length > 0" :rows="pagination.size" :totalRecords="pagination.length" @page="onPage($event)"></Paginator>
+        </div>
+    </div>
+</div>

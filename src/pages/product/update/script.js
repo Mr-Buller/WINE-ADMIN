@@ -69,7 +69,7 @@ export default {
 							discount: product.discount,
 							photos: product.photos,
 							categoryId: product.category.id,
-							countryId: product.country.id,
+							countryId: product.country ? product.country.id : '',
 							brandId: product.brand.id,
 							status: product.status,
 							description: product.description,
@@ -120,11 +120,11 @@ export default {
 				this.isUploadingImage = true
 				this.uploadImage(this.product.imageFile)
 			} else {
-				this.createProduct()
+				this.updateProduct()
 			}
 		},
 
-		createProduct() {
+		updateProduct() {
 			let msgValidation = this.validateBody()
 			if (msgValidation == "OK") {
 				this.isUpdating = true
@@ -154,12 +154,12 @@ export default {
 		async uploadImage(file) {
 			let formData = new FormData()
 			formData.append("file", file)
-			await UploadService.uploadMedia("brand", formData)
+			await UploadService.uploadMedia("product", formData)
 				.then((response) => {
 					if (response.response && response.response.status == 200) {
 						this.isUploadingImage = false
 						this.product.image = response.results.path
-						this.createProduct()
+						this.updateProduct()
 					}
 				})
 		},

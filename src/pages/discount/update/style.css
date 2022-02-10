@@ -1,0 +1,35 @@
+.product-image {
+	width: 100px;
+	box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+}
+.p-dialog .product-image {
+	width: 150px;
+	margin: 0 auto 2rem auto;
+	display: block;
+}
+.confirmation-content {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.product-item{
+	width: 100%;
+	min-height: 48px;
+	display: inline-block;
+	position: relative;
+	padding: 8px;
+	padding-left: 50px;
+	border-bottom: 1px solid #ddd;
+	cursor: pointer;
+}
+.product-item-active{
+	width: 100%;
+	min-height: 48px;
+	display: inline-block;
+	position: relative;
+	padding: 8px;
+	padding-left: 50px;
+	border-bottom: 1px solid #ddd;
+	cursor: pointer;
+	background: #f2f2f2;
+}

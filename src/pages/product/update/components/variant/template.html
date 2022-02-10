@@ -82,7 +82,7 @@
                     <td >{{variant.combination}}</td>
                     <td class="p-text-right">
                         <InputNumber v-if="update.index == variantIndex" v-model="update.price" class="p-text-right"/>
-                        <span v-else>{{formatNumber(variant.price)}}</span>
+                        <span v-else>${{formatNumber(variant.price)}}</span>
                     </td>
                     <td class="p-text-right">
                         <InputNumber v-if="update.index == variantIndex" v-model="update.quantity" class="p-text-right"/>
