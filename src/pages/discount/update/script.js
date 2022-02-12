@@ -10,6 +10,7 @@ export default {
 			isCreating: false,
 			isUploadingImage : false,
 			searchProductKey : "",
+			currentDate: this.formatDate(Date),
 			data: {
 				discount: "",
 				products: [],
@@ -20,6 +21,8 @@ export default {
 				title: "",
 				subTitle: "",
 				description: "",
+				startDate: "",
+				endDate: "",
 				dateRange: []
 			},
 			productSelected: []
@@ -41,13 +44,17 @@ export default {
 					if (response.response && response.response.status == 200) {
 						let discount = response.results
 						this.data.discount = discount
+						let startDate = new Date(discount.startDate).toLocaleDateString('fr-CA', { year: 'numeric', month: '2-digit', day: '2-digit' })
+						let endDate = new Date(discount.endDate).toLocaleDateString('fr-CA', { year: 'numeric', month: '2-digit', day: '2-digit' })
+
 						this.discount = {
 							imageFile: "",
 							image: discount.thumbnail,
 							title: discount.title,
 							subTitle: discount.subTitle,
 							description: discount.description,
-							dateRange: []
+							startDate: startDate,
+							endDate: endDate
 						}
 						this.productSelected = discount.discountDetail
 					}
@@ -118,8 +125,8 @@ export default {
 					"title": this.discount.title,
 					"thumbnail": this.discount.image,
 					"subTitle": this.discount.subTitle,
-					"startDate": this.discount.dateRange[0],
-					"endDate": this.discount.dateRange[1],
+					"startDate": this.discount.startDate,
+					"endDate": this.discount.endDate,
 					"description": this.discount.description,
 					"discountDetail": this.productSelected
 				}
@@ -131,7 +138,7 @@ export default {
 				}).catch(err => { console.log(err) })
 			} else {
 				this.isCreating = false
-				this.$toasted.show(msgValidation);
+				alert(msgValidation);
 			}
 		},
 
@@ -150,7 +157,13 @@ export default {
 
 		validateBody() {
 			if (!this.discount.title) { return "Title is required." }
-			if (this.discount.dateRange.length != 2) { return "Daterange is required." }
+			if (!this.discount.startDate) { return "Start date is required." }
+			if (!this.discount.endDate) { return "End date is required." }
+			let endDate = Date.parse(this.discount.endDate);
+			let startDate = Date.parse(this.discount.startDate);
+			if (endDate < startDate) {
+				return "End date must be bigger than start date."
+			}
 			if (this.productSelected.length == 0) { return "Selecting product is required." }
 			return "OK"
 		},
@@ -174,8 +187,9 @@ export default {
 			return process.env.VUE_APP_BASE_URL+path
 		},
 
-		formatDate(date){
-			return this.$moment().format(date | "YY-MM-DD");
+		formatDate(datetime){
+			let date  = this.$moment().format(datetime | 'yyyy-mm-dd')
+			return date.slice(0,10)
 		},
 
 		formatPrice(price){

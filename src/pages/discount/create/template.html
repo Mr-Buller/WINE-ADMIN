@@ -26,6 +26,14 @@
                             <label for="sub-title">Sub Title</label>
                             <InputText v-model="discount.subTitle" id="sub-title" type="text" />
                         </div>
+                        <div class="p-field p-col-12 p-md-2">
+                            <label for="sub-title">Start Date</label></span>
+                            <input v-model="discount.startDate" type="date" :min='currentDate' />
+                        </div>
+                        <div class="p-field p-col-12 p-md-2">
+                            <label for="sub-title">End Date</label></span>
+                            <input v-model="discount.endDate" type="date" :min='formatDate(discount.startDate)' />
+                        </div>
                         <div class="p-field p-col-12 p-md-4">
                             <label for="sub-title">Daterange</label></span>
                             <Calendar v-model="discount.dateRange" dateFormat="yy-mm-dd" selectionMode="range" />

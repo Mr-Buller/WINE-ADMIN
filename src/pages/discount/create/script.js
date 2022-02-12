@@ -10,6 +10,7 @@ export default {
 			isCreating: false,
 			isUploadingImage : false,
 			searchProductKey : "",
+			currentDate: this.formatDate(Date),
 			data: {
 				products: [],
 			},
@@ -19,6 +20,8 @@ export default {
 				title: "",
 				subTitle: "",
 				description: "",
+				startDate: "",
+				endDate: "",
 				dateRange: []
 			},
 			productSelected: []
@@ -92,8 +95,8 @@ export default {
 					"title": this.discount.title,
 					"thumbnail": this.discount.image,
 					"subTitle": this.discount.subTitle,
-					"startDate": this.formatDate(Date(this.discount.dateRange[0])),
-					"endDate": this.formatDate(Date(this.discount.dateRange[1])),
+					"startDate": this.discount.startDate,
+					"endDate": this.discount.endDate,
 					"description": this.discount.description,
 					"discountDetail": this.productSelected
 				}
@@ -123,6 +126,14 @@ export default {
 
 		validateBody() {
 			if (!this.discount.title) { return "Title is required." }
+			if (!this.discount.startDate) { return "Start date is required." }
+			if (!this.discount.endDate) { return "End date is required." }
+
+			let endDate = Date.parse(this.discount.endDate);
+			let startDate = Date.parse(this.discount.startDate);
+			if (endDate < startDate) {
+				return "End date must be bigger than start date."
+			}
 			return "OK"
 		},
 

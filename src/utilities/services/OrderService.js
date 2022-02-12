@@ -44,8 +44,8 @@ OrderService.confirmOrder = async function (orderId){
     })
 };
 
-OrderService.cancelOrder = async function (orderId){
-    return await axios.put(ApiContant.order+"/"+orderId+"/cancel","",
+OrderService.cancelOrder = async function (body,orderId){
+    return await axios.put(ApiContant.order+"/"+orderId+"/cancel",body,
         Service.headers())
     .then((response) => {
         return Service.validateError(response);

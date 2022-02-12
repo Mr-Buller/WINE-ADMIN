@@ -9,6 +9,7 @@ export default {
 			isUpdating: false,
 			showUpdateStatusDialog: false,
 			updateOrderStatus: "",
+			rejectRemark: "",
 			data:{
 				order: "",
 				orderHistories: []
@@ -67,7 +68,10 @@ export default {
 
 		cancelOrder() {
 			let orderId = this.$route.params.id
-            OrderService.cancelOrder(orderId).then((response) => {
+			let body = {
+				comment: this.rejectRemark
+			}
+            OrderService.cancelOrder(body,orderId).then((response) => {
 				this.isUpdating = false
                 if (response.response && response.response.status == 200) {
 					this.data.order.orderState = "CANCEL"

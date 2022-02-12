@@ -4,6 +4,9 @@
             <Toast />
             <Toolbar class="no-bg">
                 <template slot="right">
+                    <Button label="New" icon="pi pi-plus" class="p-button-success" @click="openCreateDialog" />
+                </template>
+                <template slot="right">
                 </template>
             </Toolbar>
 
@@ -39,6 +42,51 @@
                 </Column>
             </DataTable>
             <Paginator v-if="!isFetching && data.users.length > 0" :rows="pagination.size" :totalRecords="pagination.length" @page="onPage($event)"></Paginator>
+
+            <!-- Dialog of Create User -->
+            <Dialog :visible.sync="showCreateDialog" :style="{width: '450px'}" header="Create User" :modal="true"
+                class="p-fluid">
+                <div class="p-field">
+                    <label for="choose-image" class="pointer">
+                        <img :src="category.imageFile ? fileToPath(category.imageFile) : require('@/assets/logo.png')" class="product-image" />
+                    </label>
+                    <input @change="chooseImage($event)" hidden id="choose-image" type="file" accept="image/*" />
+                </div>
+                <div class="p-fluid p-formgrid p-grid">
+                    <div class="p-field p-col-12 p-md-6">
+                        <label>First Name</label>
+                        <InputText v-model.trim="user.firstname" required="true" autofocus/>
+                    </div>
+                    <div class="p-field p-col-12 p-md-6">
+                        <label for="name">Last Name</label>
+                        <InputText v-model.trim="user.lastname" required="true" autofocus/>
+                    </div>
+                </div>
+                <div class="p-field">
+                    <label for="role">Role</label>
+                    <Dropdown v-model="user.role" 
+                        :options="data.roles" 
+                        optionValue="id" 
+                        optionLabel="name"
+                        id="role" />
+                </div>
+                <div class="p-field">
+                    <label for="name">Phone</label>
+                    <InputText v-model.trim="user.phone" required="true" autofocus/>
+                </div>
+                <div class="p-field">
+                    <label for="name">Email</label>
+                    <InputText v-model.trim="user.email" required="true" autofocus/>
+                </div>
+                <div class="p-field">
+                    <label for="name">Password</label>
+                    <InputText v-model="user.password" type="password" id="password" />
+                </div>
+                <template #footer>
+                    <Button v-if="isCreating" label="Loading.." icon="pi pi-loading" class="p-button-text" />
+                    <Button v-else @click="validateBeforeCreate" label="Save" icon="pi pi-check" class="p-button-text" />
+                </template>
+            </Dialog>
 
             <!-- Dialog of Update Category -->
             <Dialog :visible.sync="showUpdateDialog" :style="{width: '450px'}" header="Update User" :modal="true"

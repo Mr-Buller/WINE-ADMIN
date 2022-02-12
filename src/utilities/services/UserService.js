@@ -4,6 +4,17 @@ import ApiContant from './../constants/ApiContants'
 
 const UserService = {}
 
+UserService.createUser = async function (body){
+    return await axios.post(ApiContant.user,
+        body,
+        Service.headers())
+    .then((response) => {
+        return Service.validateError(response);
+    }).catch(function (error) {
+        return error.response.data;
+    })
+};
+
 UserService.getUserInfo = async function (){
     return await axios.get(ApiContant.userInfo,
         Service.headers())

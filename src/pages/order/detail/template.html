@@ -162,15 +162,18 @@
                         <span v-if="slotProps.data.orderState == 'COMPLETED'" class="text-color-success">Completed</span>
                     </template>
                 </Column>
+                <Column header="Remark" field="remark"></Column>
+                <Column header="Action By" field="actionBy"></Column>
             </DataTable>
         </div>
     </div>
 
     <!-- Dialog of Update Status -->
-    <Dialog :visible.sync="showUpdateStatusDialog" :style="{width: '450px'}" header="Confirmation" :modal="true"
+    <Dialog :visible.sync="showUpdateStatusDialog" :style="{width: '450px'}" header="Cancel Order" :modal="true"
         class="p-fluid">
         <div class="p-field">
-            <label>Click "Confirm" to {{updateOrderStatus}} order.</label>
+            <label for="shortDescription">Remark</label>
+            <Textarea v-model="rejectRemark" :autoResize="true" rows="5" cols="30" />
         </div>
         <template #footer>
             <Button v-if="isUpdating" label="Loading..." icon="pi pi-loading" class="p-button-text" />
