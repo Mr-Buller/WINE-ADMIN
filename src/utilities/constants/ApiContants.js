@@ -28,6 +28,7 @@ const ApiContant = {
     userInfo: baseUrl + v1 + '/auth/user-info',
     listUser: baseUrl + v1 + '/user-detail/list',
     user : baseUrl + v1 + '/user-detail',
+    updateUser: baseUrl + v1 + '/user-detail/update',
 
     // Category
     listCategory: baseUrl + v1 + '/category/list',

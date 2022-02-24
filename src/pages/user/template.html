@@ -34,10 +34,14 @@
                     </template>
                 </Column>
                 <Column header="Role" field="role.name" headerStyle="width: 100px"></Column>
-                <Column field="status" header="Status" headerStyle="width: 100px">
+                <Column field="enabled" header="Status" headerStyle="width: 100px;text-align:center" bodyStyle="text-align:center">
                     <template #body="slotProps">
-                        <span v-if="slotProps.data.user.enabled" @click="openUpdateDialog(slotProps.index)" class="stage-badge status-complete">Enabled</span>
-                        <span v-else @click="openUpdateDialog(slotProps.index)" class="stage-badge status-waiting">Disabled</span>
+                        <InputSwitch v-if="slotProps.data.id != userId" @change="updateUserStatus(slotProps.index)" v-model="slotProps.data.user.enabled" />
+                    </template>
+                </Column>
+                <Column header="Action" headerStyle="width: 100px;text-align:center" bodyStyle="text-align:center">
+                    <template #body="slotProps">
+                        <span @click="openUpdateDialog(slotProps.index)" class="stage-badge status-waiting">Edit</span>
                     </template>
                 </Column>
             </DataTable>
@@ -48,7 +52,7 @@
                 class="p-fluid">
                 <div class="p-field">
                     <label for="choose-image" class="pointer">
-                        <img :src="category.imageFile ? fileToPath(category.imageFile) : require('@/assets/logo.png')" class="product-image" />
+                        <img :src="user.imageFile ? fileToPath(user.imageFile) : require('@/assets/images/default.jpeg')" class="product-image" />
                     </label>
                     <input @change="chooseImage($event)" hidden id="choose-image" type="file" accept="image/*" />
                 </div>
@@ -88,15 +92,40 @@
                 </template>
             </Dialog>
 
-            <!-- Dialog of Update Category -->
+            <!-- Dialog of Update User -->
             <Dialog :visible.sync="showUpdateDialog" :style="{width: '450px'}" header="Update User" :modal="true"
                 class="p-fluid">
-                <div v-if="updateIndex > -1" class="p-field">
-                    <label for="name">Are you sure to {{data.users[updateIndex].user.enabled ? 'disable' : 'enable'}} this user?</label>
+                <div class="p-field">
+                    <label for="choose-image" class="pointer">
+                        <img :src="user.imageFile ? fileToPath(user.imageFile) : user.photo ? getFullPathImage(user.photo) : require('@/assets/images/default.jpeg')" class="product-image" />
+                    </label>
+                    <input @change="chooseImage($event)" hidden id="choose-image" type="file" accept="image/*" />
+                </div>
+                <div class="p-fluid p-formgrid p-grid">
+                    <div class="p-field p-col-12 p-md-6">
+                        <label>First Name</label>
+                        <InputText v-model.trim="user.firstname" required="true" autofocus/>
+                    </div>
+                    <div class="p-field p-col-12 p-md-6">
+                        <label for="name">Last Name</label>
+                        <InputText v-model.trim="user.lastname" required="true" autofocus/>
+                    </div>
+                </div>
+                <div class="p-field">
+                    <label for="role">Role</label>
+                    <Dropdown v-model="user.role" 
+                        :options="data.roles" 
+                        optionValue="id" 
+                        optionLabel="name"
+                        id="role" />
+                </div>
+                <div class="p-field">
+                    <label for="name">Email</label>
+                    <InputText v-model.trim="user.email" required="true" autofocus/>
                 </div>
                 <template #footer>
-                    <Button v-if="isUpdating" label="Loading..." icon="pi pi-loading" class="p-button-text" />
-                    <Button v-else @click="updateUser" label="Save" icon="pi pi-check" class="p-button-text" />
+                    <Button v-if="isUpdating" label="Loading.." icon="pi pi-loading" class="p-button-text" />
+                    <Button v-else @click="validateBeforeUpdate" label="Save" icon="pi pi-check" class="p-button-text" />
                 </template>
             </Dialog>
         </div>

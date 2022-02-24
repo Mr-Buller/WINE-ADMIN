@@ -28,15 +28,11 @@
                         </div>
                         <div class="p-field p-col-12 p-md-2">
                             <label for="sub-title">Start Date</label></span>
-                            <input v-model="discount.startDate" type="date" :min='currentDate' />
+                            <input v-model="discount.startDate" type="date" :min='currentDate' style="width: 100%;height:26px;border: 1px solid #ced4d9;border-radius: 3px;"/>
                         </div>
                         <div class="p-field p-col-12 p-md-2">
                             <label for="sub-title">End Date</label></span>
-                            <input v-model="discount.endDate" type="date" :min='formatDate(discount.startDate)' />
-                        </div>
-                        <div class="p-field p-col-12 p-md-4">
-                            <label for="sub-title">Daterange</label></span>
-                            <Calendar v-model="discount.dateRange" dateFormat="yy-mm-dd" selectionMode="range" />
+                            <input v-model="discount.endDate" type="date" :min='formatDate(discount.startDate)' style="width: 100%;height:26px;border: 1px solid #ced4d9;border-radius: 3px;" />
                         </div>
                         <div class="p-field p-col-12">
                             <label for="shortDescription">Description</label>
@@ -76,7 +72,7 @@
                                 </Column>
                                 <Column header="Action" headerStyle="width: 100px;text-align:center" bodyStyle="text-align:center">
                                     <template #body="slotProps">
-                                        <span @click="removeProductSelected(slotProps.index)" class="stage-badge status-cancel">Remove</span>
+                                        <i @click="removeProductSelected(slotProps.index)" class="pi pi-fw pi-trash pointer"></i>
                                     </template>
                                 </Column>
                             </DataTable>
@@ -87,7 +83,6 @@
                     <Button v-else label="Loading" icon="pi pi-spin pi-spinner" class="p-mr-2"/>
                 </div>
             </div>
-            
         </div>
     </div>
 </div>

@@ -36,7 +36,7 @@
                         <span>{{formatPrice(slotProps.data.grandTotal)}}</span>
                     </template>
                 </Column>
-                <Column field="customer.fullName" header="Customer Name"></Column>
+                <Column field="customer.fullName" header="Customer"></Column>
                 <Column header="Created At" field="created">
                     <template #body="slotProps">
                         <span>{{slotProps.data.created | moment("DD-MM-YYYY")}}</span>

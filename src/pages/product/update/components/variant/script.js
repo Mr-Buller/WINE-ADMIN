@@ -1,8 +1,8 @@
 
 // import CategoryService from './../../../utilities/services/CategoryService'
 // import BrandService from './../../../utilities/services/BrandService'
-// import UploadService from './../../../utilities/services/UploadService'
-// import Helper from './../../../utilities/Helper'
+import UploadService from './../../../../../utilities/services/UploadService'
+import Helper from './../../../../../utilities/Helper'
 import ProductService from '../../../../../utilities/services/ProductService'
 import VueTagsInput from '@johmun/vue-tags-input';
 
@@ -13,6 +13,9 @@ export default {
 			tags: '',
 			options: [],
 			isCreating: false,
+			isUploadingImage: false,
+			uploadedImageLength: 0,
+			variantImages: [],
 			data: {
 				variants: []
 			},
@@ -117,6 +120,7 @@ export default {
 				let arrOption = myResult[j]
 				let variant = {
 					combination: this.getConbination(arrOption),
+					imageFile: "",
 					imageUrl: "",
 					price: 0,
 					quantity: 0
@@ -132,6 +136,40 @@ export default {
 				result.push(arrOption[i].optionValues.name)
 			}
 			return result.join('-').toLowerCase()
+		},
+
+		checkVariantImageBeforeUpdate(){
+			for(let i=0; i<this.body.variants.length; i++){
+				let variant = this.body.variants[i]
+				if(variant.imageFile){
+					this.variantImages.push(variant.imageFile)
+				}
+			}
+			this.validateBeforeUpdate()
+		},
+
+		validateBeforeUpdate(){
+			if(this.uploadedImageLength < this.variantImages.length){
+				this.isUploadingImage = true
+				let file = this.variantImages[this.uploadedImageLength]
+				this.uploadImage(file)
+			}else{
+				this.confirmCreateVariants()
+			}
+		},
+
+		async uploadImage(file) {
+			let formData = new FormData()
+			formData.append("file", file)
+			await UploadService.uploadMedia("product", formData)
+				.then((response) => {
+					if (response.response && response.response.status == 200) {
+						this.isUploadingImage = false
+						this.body.variants[this.uploadedImageLength].imageUrl = response.results.path
+						this.uploadedImageLength++
+						this.validateBeforeUpdate()
+					}
+				})
 		},
 
 		async confirmCreateVariants() {
@@ -176,12 +214,27 @@ export default {
 			}).catch(err => { console.log(err) })
 		},
 
+		async uploadVariantImage(file,variantIndex) {
+			console.log("uploadVariantImage",variantIndex)
+			let formData = new FormData()
+			formData.append("file", file)
+			await UploadService.uploadMedia("product", formData)
+				.then((response) => {
+					if (response.response && response.response.status == 200) {
+						// this.isUploadingImage = false
+						this.data.variants[variantIndex].imageUrl = response.results.path
+						this.updateImageVariant(variantIndex)
+					}
+				})
+		},
+
 		async updateVariant(index) {
-			let variantId = this.data.variants[index].id
+			let variant = this.data.variants[index]
 			let body = {
-				"id": variantId,
-				"price": this.update.price,
-				"quantity": this.update.quantity
+				"id": variant.id,
+				"price": this.update.variant.price,
+				"quantity": this.update.variant.quantity,
+				"imageUrl": variant.imageUrl
 			}
 			await ProductService.updateProductVariant(body)
 				.then((res) => {
@@ -194,11 +247,47 @@ export default {
 				})
 		},
 
-		enableUpdateVariant(index) {
+		async updateImageVariant(index) {
 			let variant = this.data.variants[index]
+			await ProductService.updateProductVariant(variant)
+				.then((res) => {
+					if (res.response && res.response.status == 200) {
+						this.data.variants[index] = res.results
+						this.disableUpdateVariant()
+					} else {
+						alert(res.message)
+					}
+				})
+		},
+
+		chooseImageVariant(e,variantIndex) {
+			let images = e.target.files;
+			if (images.length > 0) {
+				this.body.variants[variantIndex].imageUrl = ""
+				for (let i = 0; i < images.length; i++) {
+					var imageFile = images[i]
+					Helper.compressImage(imageFile).then(file => {
+						this.body.variants[variantIndex].imageFile = file
+					})
+				}
+			}
+		},
+
+		async chooseNewImageVariant(e,variantIndex) {
+			alert(variantIndex)
+			let imageFile = e.target.files[0];
+			this.data.variants[variantIndex].imageUrl = ""
+			await Helper.compressImage(imageFile).then(async file => {
+				this.data.variants[variantIndex].imageFile = file
+				await this.uploadVariantImage(this.data.variants[variantIndex].imageFile, variantIndex)
+			})
+		},
+
+		enableUpdateVariant(index) {
+			// let variant = this.data.variants[index]
 			this.update.index = index
-			this.update.price = variant.price
-			this.update.quantity = variant.quantity
+			this.update.variant.price = 120//variant.price
+			this.update.variant.quantity = 10 //variant.quantity
 		},
 
 		disableUpdateVariant() {
@@ -213,5 +302,11 @@ export default {
 			let result = x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 			return result
 		},
+
+		fileToPath(file) { return window.URL.createObjectURL(file) },
+
+		getFullPathImage(path){
+			return process.env.VUE_APP_BASE_URL+path
+		}
 	}
 }

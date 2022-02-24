@@ -8,69 +8,81 @@
                 </template>
             </Toolbar>
 
-            <DataTable :value="data.slides" dataKey="id" class="p-datatable-sm">
-                <ProgressBar v-if="isFetching" mode="indeterminate" style="height: .2rem;"></ProgressBar>
-                <template #header>
-                    <div class="table-header">
-                        <h5 class="p-m-0">Slides</h5>
+            <!-- <DataTable :value="products" :rowHover="true" :reorderableColumns="true" @columnReorder="onColReorder" @rowReorder="onRowReorder" responsiveLayout="scroll">
+                <Column :rowReorder="true" headerStyle="width: 3rem" :reorderableColumn="true" />
+                <Column v-for="col of columns" :field="col.field" :header="col.header" :key="col.field"></Column>
+            </DataTable> -->
+            <div style="width: 100%;display: inline-table;padding: 12px;background: #f8f9fa;font-size: 17px;font-weight: 500;">
+                Slides
+            </div>
+            <div class="s-item" style="background: #f8f9fa;display:inline-table">
+                <div class="s-item-info" style="width: 50px;float: left;">
+                    <b>ID</b>
+                </div>
+                <div class="s-item-info" style="width: 100px;float: left;">
+                    <b>Image</b>
+                </div>
+                <div class="s-item-info" style="width: 100px;float: right;">
+                    <b>Action</b>
+                </div>
+                <div class="s-item-info" style="text-align: left;">
+                    <b>Title</b>
+                </div>
+            </div>
+            
+            <draggable v-model="data.slides" group="people" @start="drag=true" @end="drag=false" @change="updateSlideOrdering">
+                <div v-for="(slide,slideIndex) in data.slides" :key="(slide,slideIndex)" class="s-item">
+                    <div class="s-item-info" style="width: 50px;float: left;">
+                        <span style="line-height: 39px;">{{slide.id}}</span>
                     </div>
-                </template>
-
-                <Column header="ID" field="id" 
-                    headerStyle="width: 50px;text-align:center" 
-                    bodyStyle="text-align:center"></Column>
-                <Column header="Image">
-                    <template #body="slotProps">
-                        <img :src="getFullPathImage(slotProps.data.image)" style="width: 36px;height: 36px;object-fit: cover;" />
-                    </template>
-                </Column>
-                <Column field="ordering" header="Ordering" headerStyle="width:100px;text-align:center" bodyStyle="text-align:center"></Column>
-                <Column field="status" header="Status" headerStyle="width:100px;text-align:center" bodyStyle="text-align:center"></Column>
-                <Column header="Action" headerStyle="width: 100px;text-align:center" bodyStyle="text-align:center">
-                    <template #body="slotProps">
-                        <span @click="openUpdateDialog(slotProps.index)" class="stage-badge status-waiting">Edit</span>
-                    </template>
-                </Column>
-            </DataTable>
-            <Paginator v-if="!isFetching && data.slides.length > 0" :rows="pagination.size" :totalRecords="pagination.length" @page="onPage($event)"></Paginator>
+                    <div class="s-item-info" style="width: 100px;float: left;">
+                        <img :src="getFullPathImage(slide.image)" style="width: 36px;height: 36px;object-fit: cover;" />
+                    </div>
+                    <div class="s-item-info" style="width: 100px;float: right;">
+                        <span @click="openUpdateDialog(slideIndex)" class="stage-badge status-waiting" style="line-height: 39px;">Edit</span>
+                    </div>
+                    <div class="s-item-info" style="text-align: left;">
+                        <span style="line-height: 39px;">{{slide.title}}</span>
+                    </div>
+                </div>
+            </draggable>
 
             <!-- Dialog of Create Slide -->
             <Dialog :visible.sync="showCreateDialog" :style="{width: '450px'}" header="Create Slide" :modal="true"
                 class="p-fluid">
                 <div class="p-field">
                     <label for="choose-image" class="pointer">
-                        <img :src="slide.imageFile ? fileToPath(slide.imageFile) : require('@/assets/logo.png')" class="product-image" />
+                        <img :src="slide.imageFile ? fileToPath(slide.imageFile) : require('@/assets/logo.png')"
+                            class="product-image" />
                     </label>
                     <input @change="chooseImage($event)" hidden id="choose-image" type="file" accept="image/*" />
                 </div>
                 <div class="p-field">
                     <label for="url">Action URL</label>
-                    <InputText id="url" v-model.trim="slide.url" required="true" autofocus/>
+                    <InputText id="url" v-model.trim="slide.url" required="true" autofocus />
                 </div>
                 <div class="p-field">
                     <label for="url">Title</label>
-                    <InputText id="url" v-model.trim="slide.title" required="true" autofocus/>
+                    <InputText id="url" v-model.trim="slide.title" required="true" autofocus />
                 </div>
                 <div class="p-field">
                     <label for="url">Short Description</label>
-                    <InputText id="url" v-model="slide.description" required="true" autofocus/>
+                    <InputText id="url" v-model="slide.description" required="true" autofocus />
                 </div>
                 <div class="p-field pt-2">
                     <label>Status</label>
-                    <Dropdown v-model="slide.status" 
-                        :options="slideStatus"
-                        optionValue="value" 
-                        optionLabel="name" 
+                    <Dropdown v-model="slide.status" :options="slideStatus" optionValue="value" optionLabel="name"
                         placeholder="Select a status">
-				    </Dropdown>
+                    </Dropdown>
                 </div>
                 <div class="p-field">
-                    <label >Ordering</label>
-                    <InputNumber v-model.trim="slide.ordering" required="true" autofocus/>
+                    <label>Ordering</label>
+                    <InputNumber v-model.trim="slide.ordering" required="true" autofocus />
                 </div>
                 <template #footer>
                     <Button v-if="isCreating" label="Loading.." icon="pi pi-loading" class="p-button-text" />
-                    <Button v-else @click="validateBeforeCreate" label="Save" icon="pi pi-check" class="p-button-text" />
+                    <Button v-else @click="validateBeforeCreate" label="Save" icon="pi pi-check"
+                        class="p-button-text" />
                 </template>
             </Dialog>
 
@@ -79,38 +91,33 @@
                 class="p-fluid">
                 <div class="p-field">
                     <label for="ggchoose-image" class="pointer">
-                        <img :src="slide.imageFile ? fileToPath(slide.imageFile) : slide.image ? getFullPathImage(slide.image) : require('@/assets/logo.png')" class="product-image" />
+                        <img :src="slide.imageFile ? fileToPath(slide.imageFile) : slide.image ? getFullPathImage(slide.image) : require('@/assets/logo.png')"
+                            class="product-image" />
                     </label>
                     <input @change="chooseImage($event)" hidden id="ggchoose-image" type="file" accept="image/*" />
                 </div>
                 <div class="p-field">
-                    <label >Action URL</label>
-                    <InputText v-model.trim="slide.url" required="true" autofocus/>
+                    <label>Action URL</label>
+                    <InputText v-model.trim="slide.url" required="true" autofocus />
                 </div>
                 <div class="p-field">
                     <label for="url">Title</label>
-                    <InputText id="url" v-model.trim="slide.title" required="true" autofocus/>
+                    <InputText id="url" v-model.trim="slide.title" required="true" autofocus />
                 </div>
                 <div class="p-field">
                     <label for="url">Short Description</label>
-                    <InputText id="url" v-model="slide.description" required="true" autofocus/>
+                    <InputText id="url" v-model="slide.description" required="true" autofocus />
                 </div>
                 <div class="p-field pt-2">
                     <label>Status</label>
-                    <Dropdown v-model="slide.status" 
-                        :options="slideStatus"
-                        optionValue="value" 
-                        optionLabel="name" 
+                    <Dropdown v-model="slide.status" :options="slideStatus" optionValue="value" optionLabel="name"
                         placeholder="Select a status">
-				    </Dropdown>
-                </div>
-                <div class="p-field">
-                    <label >Ordering</label>
-                    <InputNumber v-model.trim="slide.ordering" required="true" autofocus/>
+                    </Dropdown>
                 </div>
                 <template #footer>
                     <Button v-if="isUpdating" label="Loading.." icon="pi pi-loading" class="p-button-text" />
-                    <Button v-else @click="validateBeforeUpdate" label="Save" icon="pi pi-check" class="p-button-text" />
+                    <Button v-else @click="validateBeforeUpdate" label="Save" icon="pi pi-check"
+                        class="p-button-text" />
                 </template>
             </Dialog>
         </div>

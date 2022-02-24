@@ -32,6 +32,7 @@
                 <thead>
                     <tr style="background: #f5f6f7;">
                         <th width="50px" class="p-text-center">No</th>
+                        <th width="100px" class="p-text-center">Thumbnail</th>
                         <th v-for="(option, optionIndex) in options" 
                             :key="(option.id)"
                             class="p-text-left">
@@ -45,6 +46,12 @@
                     <tr v-for="(variant, variantIndex) in body.variants" 
                     :key="(variant, variantIndex)">
                         <td class="p-text-center">{{variantIndex+1}}</td>
+                        <td class="p-text-center">
+                            <label :for="'choose-image-'+variantIndex" class="pointer go-left">
+                                <img :src="variant.imageFile ? fileToPath(variant.imageFile) : variant.imageUrl ? getFullPathImage(variant.imageUrl) : require('@/assets/images/default.jpeg')" style="width: 40px;height:40px;object-fit: cover;" />
+                            </label>
+                            <input @change="chooseImageVariant($event, variantIndex)" hidden :id="'choose-image-'+variantIndex" type="file" accept="image/*" />
+                        </td>
                         <td v-for="(optionValue, optionValueIndex) in body.optionMatrix[variantIndex]" 
                         :key="(optionValue, optionValueIndex)">{{optionValue.optionValues.name}}</td>
                         <td class="p-text-right">
@@ -57,35 +64,41 @@
                 </tbody>
             </table>
             <div class="p-col p-text-right p-pr-0">
-                <Button v-if="!isCreating" @click="confirmCreateVariants" label="Submit" class="p-button-success"/>
+                <Button v-if="!isCreating" @click="checkVariantImageBeforeUpdate" label="Submit" class="p-button-success"/>
                 <Button v-else label="Loading..." class="p-button-success"/>
             </div>
         </div>
     </div>
-
 
     <div v-if="data.variants.length > 0" class="p-col-12">
         <table style="width:100%">
             <thead>
                 <tr style="background: #f5f6f7;">
                     <th width="50px" class="p-text-center">No</th>
+                    <th width="100px" class="p-text-center">Thumbnail</th>
                     <th class="p-text-left">Combination</th>
                     <th width="100px" class="p-text-right">Price</th>
                     <th width="100px" class="p-text-right">Quantity</th>
                     <th width="150px" class="p-text-right">Action</th>
                 </tr>
             </thead>
-            <tbody >
+            <tbody>
                 <tr v-for="(variant, variantIndex) in data.variants" 
                 :key="(variant, variantIndex)">
                     <td class="p-text-center">{{variantIndex+1}}</td>
+                    <td class="p-text-center">
+                        <label :for="'choose-new-image-'+variantIndex" class="pointer go-left">
+                            <img :src="variant.imageFile ? fileToPath(variant.imageFile) : variant.imageUrl ? getFullPathImage(variant.imageUrl) : require('@/assets/images/default.jpeg')" style="width: 40px;height:40px;object-fit: cover;" />
+                        </label>
+                        <input @change="chooseNewImageVariant($event, variantIndex)" hidden :id="'choose-new-image-'+variantIndex" type="file" accept="image/*" />
+                    </td>
                     <td >{{variant.combination}}</td>
                     <td class="p-text-right">
-                        <InputNumber v-if="update.index == variantIndex" v-model="update.price" class="p-text-right"/>
+                        <InputNumber v-if="update.index == variantIndex" v-model="update.variant.price" mode="currency" currency="USD" locale="en-US" class="p-text-right"/>
                         <span v-else>${{formatNumber(variant.price)}}</span>
                     </td>
                     <td class="p-text-right">
-                        <InputNumber v-if="update.index == variantIndex" v-model="update.quantity" class="p-text-right"/>
+                        <InputNumber v-if="update.index == variantIndex" v-model="update.variant.quantity" class="p-text-right"/>
                         <span v-else>{{formatNumber(variant.quantity)}}</span>
                     </td>
                     <td class="p-text-right">

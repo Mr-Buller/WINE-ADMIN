@@ -5,6 +5,7 @@ import CountryService from './../../../utilities/services/CountryService'
 import UploadService from './../../../utilities/services/UploadService'
 import Helper from './../../../utilities/Helper'
 import ProductService from '../../../utilities/services/ProductService'
+import { VueEditor } from "vue2-editor";
 
 export default {
 	name: "product-create",
@@ -12,6 +13,7 @@ export default {
 		return {
 			isCreating: false,
 			isUploadingImage: false,
+			uploadedPhotoLength: 0,
 			data: {
 				categories: [],
 				brands: [],
@@ -23,7 +25,8 @@ export default {
 				name: "",
 				price: 0,
 				discount: 0,
-				photos: "",
+				photoFiles: [],
+				photos: [],
 				categoryId: "",
 				countryId: "",
 				brandId: "",
@@ -41,6 +44,9 @@ export default {
 		this.getCategory()
 		this.getBrand()
 		this.getCountry()
+	},
+	components: {
+		VueEditor
 	},
 	mounted() {
 
@@ -80,9 +86,13 @@ export default {
 
 		async validateBeforeCreate() {
 			this.isCreating = true
-			if (this.product.imageFile) {
+			if (this.product.imageFile && !this.product.image) {
 				this.isUploadingImage = true
 				this.uploadImage(this.product.imageFile)
+			} else if (this.uploadedPhotoLength < this.product.photoFiles.length){
+				this.isUploadingImage = true
+				let file = this.product.photoFiles[this.uploadedPhotoLength]
+				this.uploadPhoto(file)
 			} else {
 				this.createProduct()
 			}
@@ -95,20 +105,19 @@ export default {
 				let body = {
 					"name": this.product.name,
 					"price": this.product.price,
-					"discount": this.product.discount,
 					"thumbnail": this.product.image,
-					"photos": this.product.image,
+					"photos": this.product.photos.join(", "),
 					"category": { "id": this.product.categoryId },
 					"country": { "id": this.product.countryId },
 					"brand": { "id": this.product.brandId },
-					// "status": this.product.status,
 					"description": this.product.description,
 					"shortDescription": this.product.shortDescription
 				}
+				console.log(body)
 				ProductService.createProduct(body).then((response) => {
 					this.isCreating = false
 					if (response.response && response.response.status == 200) {
-						this.$router.push({name: 'product-update', params:{id: response.results.id}})
+						this.$router.push({ name: 'product-update', params: { id: response.results.id } })
 					}
 				}).catch(err => { console.log(err) })
 			} else {
@@ -125,19 +134,56 @@ export default {
 					if (response.response && response.response.status == 200) {
 						this.isUploadingImage = false
 						this.product.image = response.results.path
-						this.createProduct()
+
+						if (this.product.photoFiles[0]) {
+							this.validateBeforeCreate()
+						} else {
+							this.createProduct()
+						}
 					}
 				})
+		},
+
+		async uploadPhoto(file) {
+			let formData = new FormData()
+			formData.append("file", file)
+			await UploadService.uploadMedia("product", formData)
+				.then((response) => {
+					if (response.response && response.response.status == 200) {
+						this.isUploadingImage = false
+						this.product.photos.push(response.results.path)
+						this.uploadedPhotoLength++
+						this.validateBeforeCreate()
+					}
+				})
+		},
+
+		removePhoto(index){
+			this.product.photoFiles.splice(index,1)
 		},
 
 		validateBody() {
 			if (!this.product.name) { return "Product name is required." }
 			if (!this.product.price) { return "Price is required." }
-			if (!this.product.discount.length == 0) { return "Discount is required." }
+			// if (!this.product.discount.length == 0) { return "Discount is required." }
 			if (!this.product.categoryId) { return "Category is required." }
 			if (!this.product.countryId) { return "Country is required." }
 			if (!this.product.brandId) { return "Brand is required." }
 			return "OK"
+		},
+
+		async handleImageAdded(file, Editor, cursorLocation) {
+			if (file) {
+				let formData = new FormData();
+				formData.append("file", file);
+				await UploadService.uploadMedia("product",formData)
+					.then((response) => {
+						if (response.response && response.response.status == 200) {
+							let url = process.env.VUE_APP_BASE_URL + response.results.path;
+							Editor.insertEmbed(cursorLocation, "image", url);
+						}
+					})
+			}
 		},
 
 		chooseImage(e) {
@@ -153,10 +199,22 @@ export default {
 			}
 		},
 
+		choosePhoto(e) {
+			let images = e.target.files;
+			if (images.length > 0) {
+				for (let i = 0; i < images.length; i++) {
+					var imageFile = images[i]
+					Helper.compressImage(imageFile).then(file => {
+						this.product.photoFiles.push(file)
+					})
+				}
+			}
+		},
+
 		fileToPath(file) { return window.URL.createObjectURL(file) },
 
-		getFullPathImage(path){
-			return process.env.VUE_APP_BASE_URL+path
+		getFullPathImage(path) {
+			return process.env.VUE_APP_BASE_URL + path
 		}
 	}
 }

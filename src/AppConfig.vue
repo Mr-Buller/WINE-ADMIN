@@ -1,5 +1,5 @@
 <template>
-	<div id="layout-config" :class="containerClass">
+	<div id="layout-config" :class="containerClass" style="display:none !important;">
 		<a href="#" class="layout-config-button" id="layout-config-button" @click="toggleConfigurator">
 			<i class="pi pi-cog"></i>
 		</a>

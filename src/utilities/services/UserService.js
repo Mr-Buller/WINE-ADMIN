@@ -35,6 +35,17 @@ UserService.getUser = async function (params){
     })
 };
 
+UserService.updateUser = async function (body){
+    return await axios.put(ApiContant.updateUser,
+        body,
+        Service.headers())
+    .then((response) => {
+        return Service.validateError(response);
+    }).catch(function (error) {
+        return error.response.data;
+    })
+};
+
 UserService.disableUser = async function (userId){
     return await axios.put(ApiContant.user+"/"+userId+"/disable","",
         Service.headers())

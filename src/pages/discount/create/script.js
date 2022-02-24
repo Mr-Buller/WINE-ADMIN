@@ -21,8 +21,7 @@ export default {
 				subTitle: "",
 				description: "",
 				startDate: "",
-				endDate: "",
-				dateRange: []
+				endDate: ""
 			},
 			productSelected: []
 		}
@@ -107,7 +106,7 @@ export default {
 					}
 				}).catch(err => { console.log(err) })
 			} else {
-				alert(msgValidation);
+				this.$toast.add({severity:'error', summary: 'Error Message', detail:msgValidation, life: 3000});
 			}
 		},
 
@@ -134,6 +133,8 @@ export default {
 			if (endDate < startDate) {
 				return "End date must be bigger than start date."
 			}
+
+			if (this.productSelected.length == 0) { return "Selecting product is required." }
 			return "OK"
 		},
 

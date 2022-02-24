@@ -6,6 +6,7 @@ import Helper from './../../../utilities/Helper'
 import ProductService from '../../../utilities/services/ProductService'
 import Variant from './components/variant'
 import CountryService from '../../../utilities/services/CountryService'
+import { VueEditor } from "vue2-editor";
 
 export default {
 	name: "product-update",
@@ -14,6 +15,7 @@ export default {
 			isUpdating: false,
 			isCreatingVariant: false,
 			isUploadingImage: false,
+			uploadedPhotoLength: 0,
 			data: {
 				product: "",
 				categories: [],
@@ -26,7 +28,8 @@ export default {
 				name: "",
 				price: 0,
 				discount: 0,
-				photos: "",
+				photoFiles: [],
+				photos: [],
 				categoryId: "",
 				countryId: "",
 				brandId: "",
@@ -47,6 +50,7 @@ export default {
 		this.getCountry()
 	},
 	components:{
+		VueEditor,
 		Variant
 	},
 	mounted() {
@@ -66,8 +70,8 @@ export default {
 							image: product.thumbnail,
 							name: product.name,
 							price: product.price,
-							discount: product.discount,
-							photos: product.photos,
+							photoFiles: [],
+							photos: product.photos.split(", "),
 							categoryId: product.category.id,
 							countryId: product.country ? product.country.id : '',
 							brandId: product.brand.id,
@@ -114,11 +118,37 @@ export default {
 			}).catch(err => { console.log(err) })
 		},
 
-		async validateBeforeUpdate() {
-			this.isUpdating = true
-			if (this.product.imageFile) {
+		removePhoto(index){
+			this.product.photoFiles.splice(index,1)
+		},
+
+		removeOldPhoto(index){
+			this.product.photos.splice(index,1)
+		},
+
+		async validateBeforeCreate() {
+			this.isCreating = true
+			if (this.product.imageFile && !this.product.image) {
 				this.isUploadingImage = true
 				this.uploadImage(this.product.imageFile)
+			} else if (this.uploadedPhotoLength < this.product.photoFiles.length){
+				this.isUploadingImage = true
+				let file = this.product.photoFiles[this.uploadedPhotoLength]
+				this.uploadPhoto(file)
+			} else {
+				this.createProduct()
+			}
+		},
+
+		async validateBeforeUpdate() {
+			this.isUpdating = true
+			if (this.product.imageFile && !this.product.image) {
+				this.isUploadingImage = true
+				this.uploadImage(this.product.imageFile)
+			} else if (this.uploadedPhotoLength < this.product.photoFiles.length){
+				this.isUploadingImage = true
+				let file = this.product.photoFiles[this.uploadedPhotoLength]
+				this.uploadPhoto(file)
 			} else {
 				this.updateProduct()
 			}
@@ -132,13 +162,13 @@ export default {
 					"id": this.data.product.id,
 					"name": this.product.name,
 					"price": this.product.price,
-					"discount": this.product.discount,
 					"thumbnail": this.product.image,
-					"photos": this.product.image,
+					"photos": this.product.photos.join(", "),
 					"category": { "id": this.product.categoryId },
 					"country": { "id": this.product.countryId },
 					"brand": { "id": this.product.brandId },
-					// "status": this.product.status
+					"description": this.product.description,
+					"shortDescription": this.product.shortDescription
 				}
 				ProductService.updateProduct(body).then((response) => {
 					this.isUpdating = false
@@ -164,6 +194,34 @@ export default {
 				})
 		},
 
+		async uploadPhoto(file) {
+			let formData = new FormData()
+			formData.append("file", file)
+			await UploadService.uploadMedia("product", formData)
+				.then((response) => {
+					if (response.response && response.response.status == 200) {
+						this.isUploadingImage = false
+						this.product.photos.push(response.results.path)
+						this.uploadedPhotoLength++
+						this.validateBeforeUpdate()
+					}
+				})
+		},
+
+		async handleImageAdded(file, Editor, cursorLocation) {
+			if (file) {
+				let formData = new FormData();
+				formData.append("file", file);
+				await UploadService.uploadMedia("product",formData)
+					.then((response) => {
+						if (response.response && response.response.status == 200) {
+							let url = process.env.VUE_APP_BASE_URL + response.results.path;
+							Editor.insertEmbed(cursorLocation, "image", url);
+						}
+					})
+			}
+		},
+
 		validateBody() {
 			if (!this.product.name) { return "Product name is required." }
 			if (!this.product.price) { return "Price is required." }
@@ -181,6 +239,18 @@ export default {
 					var imageFile = images[i]
 					Helper.compressImage(imageFile).then(file => {
 						this.product.imageFile = file
+					})
+				}
+			}
+		},
+
+		choosePhoto(e) {
+			let images = e.target.files;
+			if (images.length > 0) {
+				for (let i = 0; i < images.length; i++) {
+					var imageFile = images[i]
+					Helper.compressImage(imageFile).then(file => {
+						this.product.photoFiles.push(file)
 					})
 				}
 			}

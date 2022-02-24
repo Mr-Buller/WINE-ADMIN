@@ -33,10 +33,10 @@
 		"primeflex": "2.0.0-rc.1",
 		"primeicons": "4.0.0",
 		"primevue": "2.0.5",
-		"prismjs": "^1.15.0",
+		"prismjs": "^1.27.0",
 		"sass-loader": "^7.1.0",
 		"vue": "^2.6.10",
-		"vue-router": "^3.0.3",
+		"vue-router": "^3.5.3",
 		"vue-template-compiler": "^2.6.10"
 	},
 	"dependencies": {
@@ -44,6 +44,8 @@
 		"browser-image-compression": "^1.0.17",
 		"vue-cookies": "^1.7.4",
 		"vue-moment": "^4.1.0",
-		"vue-moments-ago": "^0.2.0"
+		"vue-moments-ago": "^0.2.0",
+		"vue2-editor": "^2.10.3",
+		"vuedraggable": "^2.24.3"
 	}
 }

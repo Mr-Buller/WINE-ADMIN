@@ -49,7 +49,7 @@ export default {
 			this.pagination.page = 0
 			const query = Object.assign({}, this.$route.query)
 			query.query = this.keySearch
-			await this.$router.push({ name: 'product', query }).catch(() => {})
+			await this.$router.push({ name: 'discount', query }).catch(() => {})
 		},
 
 		getFullPathImage(path){

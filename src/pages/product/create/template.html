@@ -12,10 +12,24 @@
             <div class="card">
                 <div class="p-col">
                     <div class="p-field">
-                        <label for="choose-image" class="pointer">
-                            <img :src="product.imageFile ? fileToPath(product.imageFile) : product.image ? getFullPathImage(product.image) : require('@/assets/logo.png')" class="product-image" />
+                        <p class="p-mb-1">Image for sharing to social (600px * 315px)</p>
+                        <label for="choose-image" class="pointer go-left" style="width: 200px;background: #ededed;">
+                            <img :src="product.imageFile ? fileToPath(product.imageFile) : product.image ? getFullPathImage(product.image) : require('@/assets/images/default.jpeg')" class="product-image" style="margin: auto;display: block;" />
                         </label>
                         <input @change="chooseImage($event)" hidden id="choose-image" type="file" accept="image/*" />
+                    </div>
+                    <div class="p-field">
+                        <p class="p-mb-1">Image for product (670px * 670px)</p>
+                        <div style="width: 100%;max-width:100%;display:inline-block;position: relative;overflow-x: auto;">
+                            <label for="choose-photo" class="pointer go-left p-mr-2">
+                                <img :src="require('@/assets/images/default.jpeg')" style="width: 100px;height:100px;object-fit:cover;"/>
+                            </label>
+                            <div v-for="(photo,photoIndex) in product.photoFiles" :key="photo" style="width: 100px;height:100px;display:inline-block;position: relative;background: #f2f2f2;margin-right: 6px;">
+                                <img :src="fileToPath(photo)" style="width: 100%;height:100%;position: absolute;top:50%;left:50%;transform: translate(-50%,-50%);object-fit: cover;"/>
+                                <i @click="removePhoto(photoIndex)" class="pi pi-fw pi-times-circle" style="position:absolute;top:6px;right:6px;font-size: 18px;color:#fff;cursor: pointer;"></i>
+                            </div>
+                        </div>
+                        <input @change="choosePhoto($event)" hidden id="choose-photo" multiple type="file" accept="image/*" />
                     </div>
                     <div class="p-fluid p-formgrid p-grid">
                         <div class="p-field p-col-12 p-md-6">
@@ -26,7 +40,7 @@
                             <label for="price">Price</label>
                             <InputNumber v-model="product.price" id="price" mode="currency" currency="USD" locale="en-US" />
                         </div>
-                        <div class="p-field p-col-12 p-md-3">
+                        <div hidden class="p-field p-col-12 p-md-3">
                             <label for="discount">Discount</label>
                             <InputNumber v-model="product.discount" id="discount"/>
                         </div>
@@ -54,24 +68,15 @@
                                 optionLabel="name"
                                 id="brand" />
                         </div>
-                        <!-- <div class="p-field p-col-12 p-md-3">
-                            <label for="status">Status</label>
-                            <Dropdown v-model="product.status" 
-                                :options="status" 
-                                optionValue="value" 
-                                optionLabel="name"
-                                id="status" />
-                        </div> -->
                         <div class="p-field p-col-12">
                             <label for="shortDescription">Short Description</label>
                             <InputText v-model="product.shortDescription" id="shortDescription" type="text" />
                         </div>
                         <div class="p-field p-col-12">
                             <label for="shortDescription">Description</label>
-                            <Textarea v-model="product.description" :autoResize="true" rows="5" cols="30" />
+                            <vue-editor use-custom-image-handler @image-added="handleImageAdded" v-model="product.description"></vue-editor>
                         </div>
                     </div>
-                    <!-- <Button label="Back" icon="pi pi-angle-left" class="p-button-secondary p-mr-2" @click="$router.go(-1)" /> -->
                     <Button v-if="!isCreating" label="Create" icon="pi pi-bookmark" class="p-mr-2" @click="validateBeforeCreate" />
                     <Button v-else label="Loading" icon="pi pi-spin pi-spinner" class="p-mr-2"/>
                 </div>

@@ -7,6 +7,7 @@ export default {
 	name: "user",
 	data() {
 		return {
+			userId: "",
 			isFetching: true,
 			isCreating: false,
 			isUpdating: false,
@@ -21,8 +22,8 @@ export default {
 				roles: []
 			},
 			user: {
+				id: -1,
 				imageFile: "",
-				image: "",
 				firstname: "",
 				lastname: "",
 				phone: "",
@@ -45,7 +46,7 @@ export default {
 	},
 	created() {
 		this.getUser(),
-			this.getRole()
+		this.getRole()
 	},
 	watch: {
 		"$route.fullPath": function () {
@@ -57,6 +58,7 @@ export default {
 	},
 	methods: {
 		getRole() {
+			this.userId = this.$cookies.get("userInfo").id
 			let params = "?page=0&size=50"
 			RoleService.getRole(params).then((response) => {
 				this.isFetching = false
@@ -68,6 +70,7 @@ export default {
 				}
 			}).catch(err => { console.log(err) })
 		},
+		
 		getUser() {
 			let keySearch = this.$route.query.search
 			let params = "?page=" + this.pagination.page + "&size=" + this.pagination.size
@@ -97,6 +100,16 @@ export default {
 				this.uploadImage(this.user.imageFile)
 			} else {
 				this.createUser()
+			}
+		},
+
+		async validateBeforeUpdate() {
+			this.isUpdating = true
+			if (this.user.imageFile) {
+				this.isUploadingImage = true
+				this.uploadImage(this.user.imageFile)
+			} else {
+				this.updateUser()
 			}
 		},
 
@@ -135,15 +148,20 @@ export default {
 				.then((response) => {
 					if (response.response && response.response.status == 200) {
 						this.isUploadingImage = false
-						this.user.image = response.results.path
-						this.createProduct()
+						this.user.photo = response.results.path
+						if(this.updateIndex > -1){
+							this.updateUser()
+						}else{
+							this.createUser()
+						}
 					}
 				})
 		},
 
-		updateUser() {
+		updateUserStatus(index){
+			this.updateIndex = index
 			let user = this.data.users[this.updateIndex]
-			user.user.enabled ? this.disableUser() : this.enableUser()
+			user.user.enabled ? this.enableUser() : this.disableUser()
 		},
 
 		enableUser() {
@@ -168,12 +186,65 @@ export default {
 			}).catch(err => { console.log(err) })
 		},
 
+		updateUser() {
+			let msgValidation = this.validateUpdateBody()
+			if (msgValidation == "OK") {
+				this.isUpdating = true
+				let body = {
+					"id": this.user.id,
+					"email": this.user.email,
+					"firstName": this.user.firstname,
+					"lastName": this.user.lastname,
+					"role": {
+						"id": this.user.role
+					},
+					"photo": this.user.photo
+				}
+				UserService.updateUser(body).then((response) => {
+					this.isUpdating = false
+					if (response.response && response.response.status == 200) {
+						this.data.users[this.updateIndex] = response.results
+						this.showUpdateDialog = false
+						this.updateIndex = -1
+					}
+				}).catch(err => { console.log(err) })
+			} else {
+				this.isUpdating = false
+				this.$toast.add({severity:'error', summary: 'Error Message', detail:msgValidation, life: 3000});
+			}
+		},
+
+		openUpdateDialog(index) {
+			this.updateIndex = index
+			let user = this.data.users[index]
+			this.user = {
+				id: user.id,
+				imageFile: "",
+				firstname: user.firstName,
+				lastname: user.lastName,
+				phone: "",
+				email: user.user.email,
+				password: "",
+				role: user.role.id,
+				photo: user.photo
+			}
+			this.showUpdateDialog = true
+		},
+
 		validateBody() {
 			if (!this.user.firstname) { return "First name is required." }
 			if (!this.user.lastname) { return "Last name is required." }
 			if (!this.user.email) { return "Email is required." }
 			if (!this.user.phone) { return "Phone is required." }
 			if (!this.user.password) { return "Password is required." }
+			if (!this.user.role) { return "Role is required." }
+			return "OK"
+		},
+
+		validateUpdateBody() {
+			if (!this.user.firstname) { return "First name is required." }
+			if (!this.user.lastname) { return "Last name is required." }
+			if (!this.user.email) { return "Email is required." }
 			if (!this.user.role) { return "Role is required." }
 			return "OK"
 		},
@@ -202,13 +273,7 @@ export default {
 			this.showCreateDialog = true;
 		},
 
-		openUpdateDialog(index) {
-			this.updateIndex = index
-			this.showUpdateDialog = true
-		},
-
 		hideDialog() {
-			this.showUpdateDialog = false
 			this.isUpdating = false
 			this.resetBody()
 		},

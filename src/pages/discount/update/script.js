@@ -22,8 +22,7 @@ export default {
 				subTitle: "",
 				description: "",
 				startDate: "",
-				endDate: "",
-				dateRange: []
+				endDate: ""
 			},
 			productSelected: []
 		}
@@ -46,7 +45,6 @@ export default {
 						this.data.discount = discount
 						let startDate = new Date(discount.startDate).toLocaleDateString('fr-CA', { year: 'numeric', month: '2-digit', day: '2-digit' })
 						let endDate = new Date(discount.endDate).toLocaleDateString('fr-CA', { year: 'numeric', month: '2-digit', day: '2-digit' })
-
 						this.discount = {
 							imageFile: "",
 							image: discount.thumbnail,
@@ -60,7 +58,7 @@ export default {
 					}
 				}).catch(err => { console.log(err) })
 			}else{
-				alert("Discount ID is requried.")
+				this.$toast.add({severity:'error', summary: 'Error Message', detail:"Discount ID is requried.", life: 3000});
 			}
 		},
 
@@ -138,7 +136,7 @@ export default {
 				}).catch(err => { console.log(err) })
 			} else {
 				this.isCreating = false
-				alert(msgValidation);
+				this.$toast.add({severity:'error', summary: 'Error Message', detail:msgValidation, life: 3000});
 			}
 		},
 
