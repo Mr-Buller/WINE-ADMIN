@@ -8,12 +8,12 @@
                     <h5 class="p-m-0">Create Discount</h5>
                 </template>
             </Toolbar>
-
             <div class="card">
                 <div class="p-col">
                     <div class="p-field">
+                        <p class="mb6">Image recommendation (1440px * 250px)</p>
                         <label for="choose-image" class="pointer">
-                            <img :src="discount.imageFile ? fileToPath(discount.imageFile) : discount.image ? getFullPathImage(discount.image) : require('@/assets/logo.png')" class="product-image" />
+                            <img :src="discount.imageFile ? fileToPath(discount.imageFile) : discount.image ? getFullPathImage(discount.image) : require('@/assets/images/default.jpeg')" class="product-image" />
                         </label>
                         <input @change="chooseImage($event)" hidden id="choose-image" type="file" accept="image/*" />
                     </div>

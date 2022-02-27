@@ -17,11 +17,11 @@ Helper.compressImage = async function (imageFile) {
     return;
 };
 
-Helper.buildFile = function(blob, name, type) {
+Helper.buildFile = function (blob, name, type) {
     return new File([blob], name, { type: type });
 };
 
-Helper.formatPrice = function(price) {
+Helper.formatPrice = function (price) {
     var formatter = new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD',
@@ -31,5 +31,13 @@ Helper.formatPrice = function(price) {
     })
     return formatter.format(price)
 };
+
+Helper.formatDate = function (input) {
+    var datePart = input.match(/\d+/g),
+        year = datePart[0], // get only two digits
+        month = datePart[1], day = datePart[2];
+
+    return day + '-' + month + '-' + year;
+}
 
 export default Helper;

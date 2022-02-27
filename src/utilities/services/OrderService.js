@@ -64,4 +64,14 @@ OrderService.completedOrder = async function (orderId){
     })
 };
 
+OrderService.getOrderReport = async function (params){
+    return await axios.get(ApiContant.orderReport+params,
+        Service.headers())
+    .then((response) => {
+        return Service.validateError(response);
+    }).catch(function (error) {
+        return error.response.data;
+    })
+};
+
 export default OrderService;

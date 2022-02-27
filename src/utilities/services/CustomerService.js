@@ -66,4 +66,14 @@ CustomerService.getCustomerAddress = async function (customerId){
     })
 };
 
+CustomerService.getCustomerReport = async function (param){
+    return await axios.get(ApiContant.customerReport+param,
+        Service.headers())
+    .then((response) => {
+        return Service.validateError(response);
+    }).catch(function (error) {
+        return error.response.data;
+    })
+};
+
 export default CustomerService;

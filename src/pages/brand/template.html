@@ -37,7 +37,7 @@
                 </Column>
                 <Column header="Action" headerStyle="width: 100px;text-align:center" bodyStyle="text-align:center">
                     <template #body="slotProps">
-                        <span @click="openUpdateDialog(slotProps.index)" class="stage-badge status-waiting">Edit</span>
+                        <i @click="openUpdateDialog(slotProps.index)" class="pi pi-pencil"></i>
                     </template>
                 </Column>
             </DataTable>
@@ -48,7 +48,7 @@
                 class="p-fluid">
                 <div class="p-field">
                     <label for="choose-image" class="pointer">
-                        <img :src="brand.imageFile ? fileToPath(brand.imageFile) : require('@/assets/logo.png')" class="product-image" />
+                        <img :src="brand.imageFile ? fileToPath(brand.imageFile) : require('@/assets/images/default.jpeg')" class="product-image" />
                     </label>
                     <input @change="chooseImage($event)" hidden id="choose-image" type="file" accept="image/*" />
                 </div>
@@ -67,7 +67,7 @@
                 class="p-fluid">
                 <div class="p-field">
                     <label for="choose-update-image" class="pointer">
-                        <img :src="brand.imageFile ? fileToPath(brand.imageFile) : brand.image ? getFullPathImage(brand.image) : require('@/assets/logo.png')" class="product-image" />
+                        <img :src="brand.imageFile ? fileToPath(brand.imageFile) : brand.image ? getFullPathImage(brand.image) : require('@/assets/images/default.jpeg')" class="product-image" />
                     </label>
                     <input @change="chooseImage($event)" hidden id="choose-update-image" type="file" accept="image/*" />
                 </div>

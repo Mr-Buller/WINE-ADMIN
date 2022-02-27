@@ -29,11 +29,15 @@
                     style="text-align: center;"></Column>
                 <Column field="phone" header="Phone" 
                     style="text-align: center;"></Column>
-                <Column header="Action" headerStyle="width: 200px;text-align:center" bodyStyle="text-align:center">
+                <Column header="Status" headerStyle="width: 100px;text-align:center" bodyStyle="text-align:center">
                     <template #body="slotProps">
-                        <span @click="openUpdateDialog(slotProps.index)" class="stage-badge status-waiting" style="float: right;">View</span>
-                        <div v-if="!slotProps.data.close" @click="displayUpdateStatusDialog(slotProps.index)" class="stage-badge status-waiting p-mr-2" style="width: 70px;float: right;">Open</div>
-                        <b v-else class="text-color-danger p-mr-2" style="width: 70px;float: right;">Closed</b>
+                        <div v-if="!slotProps.data.close" @click="displayUpdateStatusDialog(slotProps.index)" class="stage-badge status-waiting p-mr-2" style="width: 70px;">Open</div>
+                        <b v-else class="text-color-danger p-mr-2" style="width: 70px;">Closed</b>
+                    </template>
+                </Column>
+                <Column header="Action" headerStyle="width: 100px;text-align:center" bodyStyle="text-align:center">
+                    <template #body="slotProps">
+                        <i @click="openUpdateDialog(slotProps.index)" class="pi pi-eye pointer"></i>
                     </template>
                 </Column>
             </DataTable>

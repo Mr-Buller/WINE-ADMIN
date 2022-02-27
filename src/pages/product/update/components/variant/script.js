@@ -274,7 +274,6 @@ export default {
 		},
 
 		async chooseNewImageVariant(e,variantIndex) {
-			alert(variantIndex)
 			let imageFile = e.target.files[0];
 			this.data.variants[variantIndex].imageUrl = ""
 			await Helper.compressImage(imageFile).then(async file => {
@@ -284,17 +283,23 @@ export default {
 		},
 
 		enableUpdateVariant(index) {
-			// let variant = this.data.variants[index]
-			this.update.index = index
-			this.update.variant.price = 120//variant.price
-			this.update.variant.quantity = 10 //variant.quantity
+			let variant = this.data.variants[index]
+			this.update = {
+				index: index,
+				variant: {
+					price: variant.price,
+					quantity: variant.quantity
+				}
+			}
 		},
 
 		disableUpdateVariant() {
 			this.update = {
 				index: -1,
-				price: 0,
-				quantity: 0
+				variant: {
+					price: 0,
+					quantity: 0
+				}
 			}
 		},
 

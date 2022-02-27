@@ -14,7 +14,15 @@
                 <ProgressBar v-if="isFetching" mode="indeterminate" style="height: .2rem;"></ProgressBar>
                 <template #header>
                     <div class="table-header">
-                        <h5 class="p-m-0">Products</h5>
+                        <h5 class="p-m-0">
+                            Products
+                            <select @change="changeLimit()" v-model="pagination.size">
+                                <option :value="10">10</option>
+                                <option :value="25">25</option>
+                                <option :value="50">50</option>
+                            </select>
+                        </h5>
+                        
                         <span class="p-input-icon-left">
                             <i class="pi pi-search" />
                             <InputText @keyup.enter="searchProduct" v-model="keySearch" placeholder="Search" />
@@ -27,7 +35,9 @@
                     bodyStyle="text-align:center"></Column>
                 <Column header="Image" headerStyle="width:100px">
                     <template #body="slotProps">
-                        <img :src="getFullPathImage(slotProps.data.thumbnail)" style="width: 36px;height: 36px;object-fit: cover;" />
+                        <img :src="slotProps.data.imageError ? require('@/assets/images/default.jpeg') : getFullPathImage(slotProps.data.photos)"
+                        @error="checkImageError(slotProps.index)"
+                         style="width: 36px;height: 36px;object-fit: cover;" />
                     </template>
                 </Column>
                 <Column field="name" header="Name"></Column>
@@ -41,12 +51,6 @@
                         <span>{{slotProps.data.discount}}%</span>
                     </template>
                 </Column>
-                <!-- <Column header="Status" headerStyle="width: 100px;text-align:center" bodyStyle="text-align:center">
-                    <template #body="slotProps">
-                        <span v-if="slotProps.data.status" class="text-color-success">Enabled</span>
-                        <span v-else class="text-color-danger">Desabled</span>
-                    </template>
-                </Column> -->
                 <Column field="enabled" header="Enabled" headerStyle="width: 100px;text-align:center" bodyStyle="text-align:center">
                     <template #body="slotProps">
                         <InputSwitch @change="diableOrEnableProduct(slotProps.index)" v-model="slotProps.data.enabled" />
@@ -54,7 +58,9 @@
                 </Column>
                 <Column header="Action" headerStyle="width: 100px;text-align:center" bodyStyle="text-align:center">
                     <template #body="slotProps">
-                        <router-link :to="{name: 'product-update', params:{id: slotProps.data.id}}" class="stage-badge status-waiting">Edit</router-link>
+                        <router-link :to="{name: 'product-update', params:{id: slotProps.data.id}}">
+                            <i class="pi pi-pencil"></i>
+                        </router-link>
                     </template>
                 </Column>
             </DataTable>
@@ -65,7 +71,7 @@
                 class="p-fluid">
                 <div class="p-field">
                     <label for="choose-image" class="pointer">
-                        <img :src="brand.imageFile ? fileToPath(brand.imageFile) : require('@/assets/logo.png')" class="product-image" />
+                        <img :src="brand.imageFile ? fileToPath(brand.imageFile) : require('@/assets/images/default.jpeg')" class="product-image" />
                     </label>
                     <input @change="chooseImage($event)" hidden id="choose-image" type="file" accept="image/*" />
                 </div>
@@ -84,7 +90,7 @@
                 class="p-fluid">
                 <div class="p-field">
                     <label for="choose-update-image" class="pointer">
-                        <img :src="brand.imageFile ? fileToPath(brand.imageFile) : brand.image ? getFullPathImage(brand.image) : require('@/assets/logo.png')" class="product-image" />
+                        <img :src="brand.imageFile ? fileToPath(brand.imageFile) : brand.image ? getFullPathImage(brand.image) : require('@/assets/images/default.jpeg')" class="product-image" />
                     </label>
                     <input @change="chooseImage($event)" hidden id="choose-update-image" type="file" accept="image/*" />
                 </div>

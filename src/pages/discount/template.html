@@ -27,8 +27,8 @@
                     bodyStyle="text-align:center"></Column>
                 <Column header="Image" headerStyle="width:100px">
                     <template #body="slotProps">
-                        <img v-if="slotProps.data.thumbnail" :src="getFullPathImage(slotProps.data.thumbnail)" style="width: 36px;height: 36px;object-fit: cover;" />
-                        <img v-else :src="require('@/assets/images/default.jpeg')" style="width: 36px;height: 36px;object-fit: cover;" />
+                        <img v-if="slotProps.data.thumbnail" :src="getFullPathImage(slotProps.data.thumbnail)" style="width: 72px;height: 36px;object-fit: cover;" />
+                        <img v-else :src="require('@/assets/images/default.jpeg')" style="width: 72px;height: 36px;object-fit: cover;" />
                     </template>
                 </Column>
                 <Column field="title" header="Title"></Column>
@@ -44,7 +44,9 @@
                 </Column>
                 <Column header="Action" headerStyle="width: 100px;text-align:center" bodyStyle="text-align:center">
                     <template #body="slotProps">
-                        <router-link :to="{name: 'discount-update', params:{id: slotProps.data.id}}" class="stage-badge status-waiting">Edit</router-link>
+                        <router-link :to="{name: 'discount-update', params:{id: slotProps.data.id}}">
+                            <i class="pi pi-pencil"></i>
+                        </router-link>
                     </template>
                 </Column>
             </DataTable>

@@ -47,14 +47,16 @@ const ApiContant = {
     listCustomer: baseUrl + v1 + '/customer/list',
     customer: baseUrl + v1 + '/customer',
     customerRegister: baseUrl +'/v1/api/customer/register',
+    customerReport: baseUrl + v1 + '/customer/report',
 
     // Slide
     slide: baseUrl + v1 + '/slide',
-    listSlide: baseUrl + v1 + '/slide/list',
+    listSlide: baseUrl + v1 + '/slide/all',
 
     // Order
     order: baseUrl + v1 + '/order',
     listOrder: baseUrl + v1 + '/order/list',
+    orderReport : baseUrl + v1 + '/order/report',
 
     //upload
     uploadImage: baseUrl+'/storage/upload-image-',

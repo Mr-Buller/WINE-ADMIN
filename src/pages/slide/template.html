@@ -39,7 +39,7 @@
                         <img :src="getFullPathImage(slide.image)" style="width: 36px;height: 36px;object-fit: cover;" />
                     </div>
                     <div class="s-item-info" style="width: 100px;float: right;">
-                        <span @click="openUpdateDialog(slideIndex)" class="stage-badge status-waiting" style="line-height: 39px;">Edit</span>
+                        <i @click="openUpdateDialog(slideIndex)" class="pi pi-pencil" style="line-height: 39px;"></i>
                     </div>
                     <div class="s-item-info" style="text-align: left;">
                         <span style="line-height: 39px;">{{slide.title}}</span>
@@ -52,7 +52,7 @@
                 class="p-fluid">
                 <div class="p-field">
                     <label for="choose-image" class="pointer">
-                        <img :src="slide.imageFile ? fileToPath(slide.imageFile) : require('@/assets/logo.png')"
+                        <img :src="slide.imageFile ? fileToPath(slide.imageFile) : require('@/assets/images/default.jpeg')"
                             class="product-image" />
                     </label>
                     <input @change="chooseImage($event)" hidden id="choose-image" type="file" accept="image/*" />
@@ -91,7 +91,7 @@
                 class="p-fluid">
                 <div class="p-field">
                     <label for="ggchoose-image" class="pointer">
-                        <img :src="slide.imageFile ? fileToPath(slide.imageFile) : slide.image ? getFullPathImage(slide.image) : require('@/assets/logo.png')"
+                        <img :src="slide.imageFile ? fileToPath(slide.imageFile) : slide.image ? getFullPathImage(slide.image) : require('@/assets/images/default.jpeg')"
                             class="product-image" />
                     </label>
                     <input @change="chooseImage($event)" hidden id="ggchoose-image" type="file" accept="image/*" />

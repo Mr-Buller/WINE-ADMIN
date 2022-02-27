@@ -12,8 +12,9 @@
             <div class="card">
                 <div class="p-col">
                     <div class="p-field">
+                        <p class="mb6">Image recommendation (1440px * 250px)</p>
                         <label for="choose-image" class="pointer">
-                            <img :src="discount.imageFile ? fileToPath(discount.imageFile) : discount.image ? getFullPathImage(discount.image) : require('@/assets/logo.png')" class="product-image" />
+                            <img :src="discount.imageFile ? fileToPath(discount.imageFile) : discount.image ? getFullPathImage(discount.image) : require('@/assets/images/default.jpeg')" class="product-image" />
                         </label>
                         <input @change="chooseImage($event)" hidden id="choose-image" type="file" accept="image/*" />
                     </div>
@@ -77,7 +78,7 @@
                                 </Column>
                                 <Column header="Action" headerStyle="width: 100px;text-align:center" bodyStyle="text-align:center">
                                     <template #body="slotProps">
-                                        <span @click="removeProductSelected(slotProps.index)" class="stage-badge status-cancel">Remove</span>
+                                        <i @click="removeProductSelected(slotProps.index)" class="pi pi-fw pi-trash pointer"></i>
                                     </template>
                                 </Column>
                             </DataTable>

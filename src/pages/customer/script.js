@@ -1,4 +1,5 @@
 import CustomerService from './../../utilities/services/CustomerService';
+import Helper from './../../utilities/Helper'
 import Paginator from 'primevue/paginator';
 
 export default {
@@ -9,9 +10,11 @@ export default {
 			showDetailDialog: false,
 			showCreateCustomerDialog: false,
 			showUpdateCustomerDialog: false,
-			showUpdateStatusDialog: false,
 			isCreatingCustomer: false,
 			isUpdating: false,
+			isGenerating: false,
+			showReportDialog: false,
+			currentDate: this.formatDate(Date),
 			updateCustomerIndex: -1,
 			updateStatusIndex: -1,
 			keySearch: "",
@@ -19,13 +22,18 @@ export default {
 				customer: "",
 				customers: [],
 				customerAddress: [],
-				roles: []
+				roles: [],
+				exports: []
 			},
 			pagination:{
 				page : 0,
 				size : 10,
 				totalPage: 0,
 				length: 0
+			},
+			report:{
+				startDate: "",
+				endDate: ""
 			},
 			customer:{
 				id: -1,
@@ -98,11 +106,6 @@ export default {
 			this.showUpdateCustomerDialog = true;
 		},
 
-		openUpdateStatusDialog(index){
-			this.updateStatusIndex = index
-			this.showUpdateStatusDialog = true
-		},
-
 		async validateBeforeCreateCustomer(){
             let validatedMessage = this.validateCustomerFields(this.customer);
             if (validatedMessage == "ok") {
@@ -138,28 +141,32 @@ export default {
 			}).catch(err => { console.log(err) })
 		},
 
-		updateStatus(){
-			let customer = this.data.customers[this.updateStatusIndex]
-			customer.enabled ? this.disableCustomer() : this.enableCustomer()
+		diableOrEnable(index){
+			let enabled = this.data.customers[index].enabled
+			if(enabled){
+				this.enableCustomer(index)
+			}else{
+				this.disableCustomer(index)
+			}
 		},
 
-		enableCustomer() {
-			let customerId  = this.data.customers[this.updateStatusIndex].id
+		enableCustomer(index) {
+			let customerId  = this.data.customers[index].id
 			CustomerService.enableCustomer(customerId).then((response) => {
 				this.isUpdating = false
 				if (response && response.status == 200) {
-					this.data.customers[this.updateStatusIndex].enabled = true
+					this.data.customers[index].enabled = true
 					this.hideDialog()
 				}
 			}).catch(err => { console.log(err) })
 		},
 
-		disableCustomer() {
-			let customerId  = this.data.customers[this.updateStatusIndex].id
+		disableCustomer(index) {
+			let customerId  = this.data.customers[index].id
 			CustomerService.disableCustomer(customerId).then((response) => {
 				this.isUpdating = false
 				if (response && response.status == 200) {
-					this.data.customers[this.updateStatusIndex].enabled = false
+					this.data.customers[index].enabled = false
 					this.hideDialog()
 				}
 			}).catch(err => { console.log(err) })
@@ -198,13 +205,52 @@ export default {
             }).catch(err => { console.log(err) })
 		},
 
+		validateBeforeReport(){
+			let msgValidation = this.validateDate()
+			if (msgValidation == "OK") {
+				this.isGenerating = true
+				let startDate = Helper.formatDate(this.report.startDate)
+				let endDate = Helper.formatDate(this.report.endDate)
+				let params = "?startDate="+startDate+"&endDate="+endDate
+				CustomerService.getCustomerReport(params).then((response) => {
+					if (response.response && response.response.status == 200) {
+						this.data.exports = response.results
+						setTimeout(() => {
+							this.$refs.dataExport.exportCSV();
+							this.isGenerating = false
+							this.showReportDialog = false
+						})
+					}
+				}).catch(err => { console.log(err) })
+			}else{
+				this.$toast.add({severity:'error', summary: 'Error Message', detail:msgValidation, life: 2000});
+			}
+		},
+
+		validateDate() {
+			if (!this.report.startDate) { return "Start date is required." }
+			if (!this.report.endDate) { return "End date is required." }
+
+			let endDate = Date.parse(this.report.endDate);
+			let startDate = Date.parse(this.report.startDate);
+			if (endDate < startDate) {
+				return "End date must be bigger than start date."
+			}
+
+			return "OK"
+		},
+
 		hideDialog(){
 			this.showCreateCustomerDialog = false
 			this.showUpdateCustomerDialog = false
 
-			this.showUpdateStatusDialog = false
 			this.isUpdating = false
 			this.updateStatusIndex = -1
+		},
+
+		formatDate(datetime){
+			let date  = this.$moment().format(datetime | 'yyyy-mm-dd')
+			return date.slice(0,10)
 		},
 
 		exportCSV() {

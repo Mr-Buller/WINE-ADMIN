@@ -75,6 +75,18 @@ export default {
 
 	},
 	methods: {
+		getSlide() {
+			let keySearch = this.$route.query.search
+			let params = ""
+			if (keySearch) { params = params + "?query=" + keySearch }
+			SlideService.getSlide(params).then((response) => {
+				this.isFetching = false
+				if (response.response && response.response.status == 200) {
+					this.data.slides = response.results
+				}
+			}).catch(err => { console.log(err) })
+		},
+
 		updateSlideOrdering(){
 			this.data.slides.map((item, index) => {
 				item.ordering = index
@@ -95,21 +107,6 @@ export default {
 		onRowReorder(event) {
 			this.products = event.value;
 			this.$toast.add({ severity: 'success', summary: 'Rows Reordered', life: 3000 });
-		},
-
-		getSlide() {
-			let keySearch = this.$route.query.search
-			let params = "?page=" + this.pagination.page + "&size=" + this.pagination.size
-			if (keySearch) { params = params + "&query=" + keySearch }
-			SlideService.getSlide(params).then((response) => {
-				this.isFetching = false
-				if (response.response && response.response.status == 200) {
-					this.data.slides = response.results
-					this.pagination.totalPage = response.totalPage
-					this.pagination.length = response.length
-					this.pagination.page = response.page
-				}
-			}).catch(err => { console.log(err) })
 		},
 
 		async validateBeforeCreate() {

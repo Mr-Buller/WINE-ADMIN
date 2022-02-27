@@ -79,7 +79,7 @@
                     <th class="p-text-left">Combination</th>
                     <th width="100px" class="p-text-right">Price</th>
                     <th width="100px" class="p-text-right">Quantity</th>
-                    <th width="150px" class="p-text-right">Action</th>
+                    <th width="80px" class="p-text-center">Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -101,14 +101,10 @@
                         <InputNumber v-if="update.index == variantIndex" v-model="update.variant.quantity" class="p-text-right"/>
                         <span v-else>{{formatNumber(variant.quantity)}}</span>
                     </td>
-                    <td class="p-text-right">
-                        <button v-if="update.index == -1" @click="enableUpdateVariant(variantIndex)" class="stage-badge status-waiting" style="border: none;">Edit</button>
-                        <button v-if="update.index == variantIndex" @click="updateVariant(variantIndex)" class="stage-badge status-complete p-mr-2" style="border: none;">
-                            Done
-                        </button>
-                        <button v-if="update.index == variantIndex" @click="disableUpdateVariant" class="stage-badge" style="border: none;">
-                            Cancel
-                        </button>
+                    <td class="p-text-center">
+                        <i v-if="update.index == -1" @click="enableUpdateVariant(variantIndex)" class="pi pi-pencil pointer"></i>
+                        <i v-if="update.index == variantIndex" @click="updateVariant(variantIndex)" class="pi pi-save pointer p-mr-2"></i>
+                        <i v-if="update.index == variantIndex" @click="disableUpdateVariant" class="pi pi-times-circle pointer"></i>
                     </td>
                 </tr>
             </tbody>

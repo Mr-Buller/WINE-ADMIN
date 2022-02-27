@@ -27,7 +27,7 @@ export default {
 			},
 			pagination:{
 				page : 0,
-				size : 10,
+				size : 50,
 				totalPage: 0,
 				length: 0
 			},
@@ -45,6 +45,10 @@ export default {
 
 	},
 	methods: {
+		async changeLimit(){
+			this.pagination.page = 0
+			this.getProduct()
+		},
 		getProduct() {
 			this.keySearch = this.$route.query.query
 			let params = "?page="+this.pagination.page+"&size="+this.pagination.size
@@ -226,6 +230,18 @@ export default {
                 }
             }
 		},
+
+		getFirstPhoto(photos){
+            let newPhotos = []
+            if(photos){
+                newPhotos = photos.split(", ")
+            }
+            return this.getFullPath(newPhotos[0])
+        },
+
+        checkImageError(index){
+            this.$set(this.data.products[index], "imageError", true)
+        },
 		
 		fileToPath(file){ return window.URL.createObjectURL(file) },
 

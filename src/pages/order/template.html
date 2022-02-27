@@ -4,7 +4,7 @@
             <Toast />
             <Toolbar class="no-bg">
                 <template slot="right">
-                    <Button @click="exportCSV($event)" label="Export" icon="pi pi-upload" class="p-button-help" />
+                    <Button @click="showReportDialog = true" label="Export" icon="pi pi-upload" class="p-button-help" />
                 </template>
             </Toolbar>
 
@@ -32,7 +32,7 @@
                     </template>
                 </Column>
                 <Column header="Grand Total" headerStyle="text-align:right" bodyStyle="text-align:right">
-                    <template #body="slotProps" >
+                    <template #body="slotProps">
                         <span>{{formatPrice(slotProps.data.grandTotal)}}</span>
                     </template>
                 </Column>
@@ -46,16 +46,96 @@
                     <template #body="slotProps">
                         <span v-if="slotProps.data.orderState == 'PENDING'" class="text-color-warning">Pending</span>
                         <span v-if="slotProps.data.orderState == 'CANCEL'" class="text-color-danger">Cancel</span>
-                        <span v-if="slotProps.data.orderState == 'COMPLETED'" class="text-color-success">Completed</span>
+                        <span v-if="slotProps.data.orderState == 'COMPLETED'"
+                            class="text-color-success">Completed</span>
                     </template>
                 </Column>
                 <Column header="Action" headerStyle="width: 100px;text-align:center" bodyStyle="text-align:center">
                     <template #body="slotProps">
-                        <router-link :to="{name: 'order-detail', params:{id: slotProps.data.id}}" class="stage-badge status-waiting p-mr-2">Detail</router-link>
+                        <router-link :to="{name: 'order-detail', params:{id: slotProps.data.id}}">
+                            <i class="pi pi-eye"></i>
+                        </router-link>
                     </template>
                 </Column>
             </DataTable>
-            <Paginator v-if="!isFetching && data.orders.length > 0" :rows="pagination.size" :totalRecords="pagination.length" @page="onPage($event)"></Paginator>
+            <Paginator v-if="!isFetching && data.orders.length > 0" :rows="pagination.size"
+                :totalRecords="pagination.length" @page="onPage($event)"></Paginator>
         </div>
     </div>
+
+    <DataTable hidden ref="dataExport" :value="data.exports" dataKey="id" class="p-datatable-sm">
+        <ProgressBar v-if="isFetching" mode="indeterminate" style="height: .2rem;"></ProgressBar>
+        <template #header>
+            <div class="table-header">
+                <h5 class="p-m-0">Orders</h5>
+                <span class="p-input-icon-left">
+                    <i class="pi pi-search" />
+                    <InputText @keyup.enter="onSearch" v-model="keySearch" placeholder="Search" />
+                </span>
+            </div>
+        </template>
+
+        <Column header="Ref" field="ref" bodyStyle="white-space: nowrap;"></Column>
+        <Column header="Total" headerStyle="text-align:right" bodyStyle="text-align:right">
+            <template #body="slotProps">
+                <span>{{formatPrice(slotProps.data.total)}}</span>
+            </template>
+        </Column>
+        <Column header="Total Discount" headerStyle="text-align:right" bodyStyle="text-align:right">
+            <template #body="slotProps">
+                <span>{{formatPrice(slotProps.data.totalPriceDiscount)}}</span>
+            </template>
+        </Column>
+        <Column header="Grand Total" headerStyle="text-align:right" bodyStyle="text-align:right">
+            <template #body="slotProps">
+                <span>{{formatPrice(slotProps.data.grandTotal)}}</span>
+            </template>
+        </Column>
+        <Column field="customer.fullName" header="Customer"></Column>
+        <Column header="Created At" field="created">
+            <template #body="slotProps">
+                <span>{{slotProps.data.created | moment("DD-MM-YYYY")}}</span>
+            </template>
+        </Column>
+        <Column header="Status" field="orderState" headerStyle="width: 100px;">
+            <template #body="slotProps">
+                <span v-if="slotProps.data.orderState == 'PENDING'" class="text-color-warning">Pending</span>
+                <span v-if="slotProps.data.orderState == 'CANCEL'" class="text-color-danger">Cancel</span>
+                <span v-if="slotProps.data.orderState == 'COMPLETED'" class="text-color-success">Completed</span>
+            </template>
+        </Column>
+        <Column header="Action" headerStyle="width: 100px;text-align:center" bodyStyle="text-align:center">
+            <template #body="slotProps">
+                <router-link :to="{name: 'order-detail', params:{id: slotProps.data.id}}">
+                    <i class="pi pi-eye"></i>
+                </router-link>
+            </template>
+        </Column>
+    </DataTable>
+
+    <!-- Dialog of Genderate Report -->
+    <Dialog :visible.sync="showReportDialog" :style="{width: '450px'}" header="Genderate Report" :modal="true"
+        class="p-fluid">
+        <div class="p-field">
+            <label for="country">Order Status</label>
+            <Dropdown v-model="report.orderStatus" 
+                :options="status"
+                optionValue="val" 
+                optionLabel="label" />
+        </div>
+        <div class="p-field">
+            <label for="sub-title">Start Date</label></span>
+            <input v-model="report.startDate" type="date" :max='currentDate'
+                style="width: 100%;height:26px;border: 1px solid #ced4d9;border-radius: 3px;" />
+        </div>
+        <div class="p-field">
+            <label for="sub-title">End Date</label></span>
+            <input v-model="report.endDate" type="date" :max='currentDate'
+                style="width: 100%;height:26px;border: 1px solid #ced4d9;border-radius: 3px;" />
+        </div>
+        <template #footer>
+            <Button v-if="isGenerating" label="Loading..." icon="pi pi-loading" class="p-button-text" />
+            <Button v-else @click="validateBeforeReport" label="Save" icon="pi pi-check" class="p-button-text" />
+        </template>
+    </Dialog>
 </div>
