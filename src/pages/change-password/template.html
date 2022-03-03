@@ -1,0 +1,30 @@
+<div class="p-grid crud-demo">
+    <div class="p-col-12">
+        <div class="card p-p-0">
+            <Toast />
+            <Toolbar class="no-bg">
+                <template slot="left">
+                    <h3 class="p-mb-0">Change Password</h3>
+                </template>
+            </Toolbar>
+            <div class="card p-pt-0">
+                <div class="p-col-6">
+                    <div class="p-fluid p-formgrid p-grid">
+                        <div class="p-field p-col-12 p-md-6">
+                            <label for="currentPassword">Current Password</label>
+                            <InputText v-model="currentPassword" id="currentPassword" type="text" />
+                        </div>
+                        <div class="p-field p-col-12 p-md-6">
+                            <label for="newPassword">New Password</label>
+                            <InputText v-model="newPassword" id="newPassword" type="text" />
+                        </div>
+                    </div>
+                    <div style="width: 100%;text-align: right;">
+                        <Button v-if="!isUpdating" @click="changePassword" label="Update" icon="pi pi-bookmark" class="p-mr-2" />
+                        <Button v-else label="Loading" icon="pi pi-spin pi-spinner" class="p-mr-2"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -31,6 +31,7 @@ export default {
 	},
 	methods: {
 		getDiscount() {
+			this.isFetching = true
 			this.keySearch = this.$route.query.query
 			let params = "?page="+this.pagination.page+"&size="+this.pagination.size
 			if(this.keySearch){ params = params+"&query="+this.keySearch }

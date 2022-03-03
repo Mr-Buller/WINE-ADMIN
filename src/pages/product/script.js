@@ -25,9 +25,23 @@ export default {
 				image: "",
 				name: ""
 			},
+			limits:[
+				{
+					val: 10,
+					label: 10,
+				},
+				{
+					val: 25,
+					label: 25,
+				},
+				{
+					val: 50,
+					label: 50,
+				}
+			],
 			pagination:{
 				page : 0,
-				size : 50,
+				size : 25,
 				totalPage: 0,
 				length: 0
 			},
@@ -50,6 +64,7 @@ export default {
 			this.getProduct()
 		},
 		getProduct() {
+			this.isFetching = true
 			this.keySearch = this.$route.query.query
 			let params = "?page="+this.pagination.page+"&size="+this.pagination.size
 			if(this.keySearch){ params = params+"&query="+this.keySearch }

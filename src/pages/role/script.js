@@ -33,6 +33,7 @@ export default {
 	},
 	methods: {
 		getRole() {
+			this.isFetching = true
 			let params = "?page=0&size=50"
             RoleService.getRole(params).then((response) => {
 				this.isFetching = false

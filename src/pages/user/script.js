@@ -36,6 +36,20 @@ export default {
 				id: -1,
 				name: ""
 			},
+			limits:[
+				{
+					val: 10,
+					label: 10,
+				},
+				{
+					val: 25,
+					label: 25,
+				},
+				{
+					val: 50,
+					label: 50,
+				}
+			],
 			pagination: {
 				page: 0,
 				size: 10,
@@ -58,6 +72,7 @@ export default {
 	},
 	methods: {
 		getRole() {
+			this.isFetching = true
 			this.userId = this.$cookies.get("userInfo").id
 			let params = "?page=0&size=50"
 			RoleService.getRole(params).then((response) => {
@@ -261,6 +276,11 @@ export default {
 					})
 				}
 			}
+		},
+
+		async changeLimit(){
+			this.pagination.page = 0
+			this.getUser()
 		},
 
 		fileToPath(file) { return window.URL.createObjectURL(file) },

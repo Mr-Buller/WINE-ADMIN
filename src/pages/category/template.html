@@ -34,7 +34,17 @@
                     </template>
                 </Column>
             </DataTable>
-            <Paginator v-if="!isFetching && data.categories.length > 0" :rows="pagination.size" :totalRecords="pagination.length" @page="onPage($event)"></Paginator>
+
+            <div class="p-col-12" style="display: inline-block;">
+                <div class="p-ml-3" style="float: left;margin-top: 16px;">
+                    <span>Show records : </span>
+                    <Dropdown @change="changeLimit()" v-model="pagination.size" 
+                        :options="limits" 
+                        optionValue="val" 
+                        optionLabel="label" />
+                </div>
+                <Paginator v-if="!isFetching && data.categories.length > 0" :rows="pagination.size" :totalRecords="pagination.length" @page="onPage($event)" style="float: right;"></Paginator>
+            </div>
 
             <!-- Dialog of Create Category -->
             <Dialog :visible.sync="showCreateCategoryDialog" :style="{width: '450px'}" header="Create Category" :modal="true"

@@ -27,7 +27,7 @@ export default {
 			},
 			pagination:{
 				page : 0,
-				size : 10,
+				size : 25,
 				totalPage: 0,
 				length: 0
 			},
@@ -35,6 +35,20 @@ export default {
 				startDate: "",
 				endDate: ""
 			},
+			limits:[
+				{
+					val: 10,
+					label: 10,
+				},
+				{
+					val: 25,
+					label: 25,
+				},
+				{
+					val: 50,
+					label: 50,
+				}
+			],
 			customer:{
 				id: -1,
 				firstName: "",
@@ -61,6 +75,7 @@ export default {
 	},
 	methods: {
 		getCustomers() {
+			this.isFetching = true
 			let keySearch = this.$route.query.search
 			let params = "?page="+this.pagination.page+"&size="+this.pagination.size
 			if(keySearch){ params = params+"&query="+keySearch }
@@ -246,6 +261,11 @@ export default {
 
 			this.isUpdating = false
 			this.updateStatusIndex = -1
+		},
+
+		async changeLimit(){
+			this.pagination.page = 0
+			this.getCustomers()
 		},
 
 		formatDate(datetime){

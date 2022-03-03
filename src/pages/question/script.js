@@ -22,9 +22,23 @@ export default {
 				id: -1,
 				name: ""
 			},
+			limits:[
+				{
+					val: 10,
+					label: 10,
+				},
+				{
+					val: 25,
+					label: 25,
+				},
+				{
+					val: 50,
+					label: 50,
+				}
+			],
 			pagination:{
 				page : 0,
-				size : 10,
+				size : 25,
 				totalPage: 0,
 				length: 0
 			},
@@ -50,6 +64,7 @@ export default {
 		},
 
 		getQuestion() {
+			this.isFetching = true
 			let keySearch = this.$route.query.search
 			let params = "?page="+this.pagination.page+"&size="+this.pagination.size
 			if(keySearch){ params = params+"&query="+keySearch }
@@ -124,6 +139,11 @@ export default {
 			this.country = {
 				name: ""
 			}
+		},
+
+		async changeLimit(){
+			this.pagination.page = 0
+			this.getQuestion()
 		},
 
 		getFullPathImage(path){

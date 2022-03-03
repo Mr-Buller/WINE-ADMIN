@@ -1,0 +1,37 @@
+<div class="p-grid crud-demo">
+    <div class="p-col-12">
+        <div class="card p-p-0">
+            <Toast />
+            <Toolbar class="no-bg">
+                <template slot="left">
+                    <h3 class="p-mb-0">Account</h3>
+                </template>
+            </Toolbar>
+            <div class="card p-pt-0">
+                <div class="p-col-6">
+                    <div class="p-field">
+                        <p>User profile (100px * 100px)</p>
+                        <label for="choose-image" class="pointer">
+                            <img :src="imageFile ? fileToPath(imageFile) : userInfo.photo ? getFullPathImage(userInfo.photo) : require('@/assets/images/default.jpeg')" class="product-image" />
+                        </label>
+                        <input @change="chooseImage($event)" hidden id="choose-image" type="file" accept="image/*" />
+                    </div>
+                    <div class="p-fluid p-formgrid p-grid">
+                        <div class="p-field p-col-12 p-md-6">
+                            <label for="productName">Firstname</label>
+                            <InputText v-model="userInfo.firstName" type="text" />
+                        </div>
+                        <div class="p-field p-col-12 p-md-6">
+                            <label for="productName">Lastname</label>
+                            <InputText v-model="userInfo.lastName" type="text" />
+                        </div>
+                    </div>
+                    <div style="width: 100%;text-align: right;">
+                        <Button v-if="!isUpdating" @click="validateBeforeUpdate" label="Update" icon="pi pi-bookmark" class="p-mr-2" />
+                        <Button v-else label="Loading" icon="pi pi-spin pi-spinner" class="p-mr-2"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

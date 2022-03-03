@@ -76,6 +76,7 @@ export default {
 	},
 	methods: {
 		getSlide() {
+			this.isFetching = true
 			let keySearch = this.$route.query.search
 			let params = ""
 			if (keySearch) { params = params + "?query=" + keySearch }

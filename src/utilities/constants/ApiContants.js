@@ -4,6 +4,7 @@ const v1 = '/v1/api/admin'
 const ApiContant = {
     // Auth
     login : baseUrl + v1 + '/auth/login',
+    changePassword : baseUrl + v1 + '/auth/change-password',
 
     // Product
     listProduct : baseUrl + v1 + '/product/list',

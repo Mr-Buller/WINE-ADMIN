@@ -25,9 +25,23 @@ export default {
 				name: "",
 				enabled: false
 			},
+			limits:[
+				{
+					val: 10,
+					label: 10,
+				},
+				{
+					val: 25,
+					label: 25,
+				},
+				{
+					val: 50,
+					label: 50,
+				}
+			],
 			pagination:{
 				page : 0,
-				size : 10,
+				size : 25,
 				totalPage: 0,
 				length: 0
 			},
@@ -49,6 +63,7 @@ export default {
 	},
 	methods: {
 		getBrand() {
+			this.isFetching = true
 			let keySearch = this.$route.query.search
 			let params = "?page="+this.pagination.page+"&size="+this.pagination.size
 			if(keySearch){ params = params+"&query="+keySearch }
@@ -214,6 +229,11 @@ export default {
                     })
                 }
             }
+		},
+
+		async changeLimit(){
+			this.pagination.page = 0
+			this.getBrand()
 		},
 		
 		fileToPath(file){ return window.URL.createObjectURL(file) },

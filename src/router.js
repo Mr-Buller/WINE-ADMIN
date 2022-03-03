@@ -6,6 +6,8 @@ import Login from './pages/login'
 
 import Role from './pages/role'
 
+import Account from './pages/account'
+
 import Customer from './pages/customer'
 import User from './pages/user'
 
@@ -29,6 +31,8 @@ import ContactUs from './pages/contact-us'
 
 import Question from './pages/question'
 
+import ChangePassword from './pages/change-password'
+
 
 const isLoggedIn = (to, from, next) => {
 	if (!Vue.$cookies.get('token')) {
@@ -50,6 +54,7 @@ const routes = [
   { path: '/',name: 'dashboard', component: Dashboard, beforeEnter: isLoggedIn },
   { path: '/login',name: 'login', component: Login, beforeEnter: isNotLoggedIn },
   { path: '/role',name: 'role', component: Role, beforeEnter: isLoggedIn },
+  { path: '/account',name: 'account', component: Account, beforeEnter: isLoggedIn },
   { path: '/customer',name: 'customer', component: Customer, beforeEnter: isLoggedIn },
   { path: '/category',name: 'category', component: Category, beforeEnter: isLoggedIn },
   { path: '/brand',name: 'brand', component: Brand, beforeEnter: isLoggedIn },
@@ -66,6 +71,7 @@ const routes = [
   { path: '/country',name: 'country', component: Country, beforeEnter: isLoggedIn },
   { path: '/contact-us',name: 'contact-us', component: ContactUs, beforeEnter: isLoggedIn },
   { path: '/question',name: 'question', component: Question , beforeEnter: isLoggedIn },
+  { path: '/change-password',name: 'change-password', component: ChangePassword , beforeEnter: isLoggedIn },
 ]
 
 const router = new VueRouter({

@@ -16,13 +16,7 @@
                     <div class="table-header">
                         <h5 class="p-m-0">
                             Products
-                            <select @change="changeLimit()" v-model="pagination.size">
-                                <option :value="10">10</option>
-                                <option :value="25">25</option>
-                                <option :value="50">50</option>
-                            </select>
                         </h5>
-                        
                         <span class="p-input-icon-left">
                             <i class="pi pi-search" />
                             <InputText @keyup.enter="searchProduct" v-model="keySearch" placeholder="Search" />
@@ -33,7 +27,7 @@
                 <Column header="ID" field="id" 
                     headerStyle="width: 50px;text-align:center" 
                     bodyStyle="text-align:center"></Column>
-                <Column header="Image" headerStyle="width:100px">
+                <Column header="Image" headerStyle="width:80px">
                     <template #body="slotProps">
                         <img :src="slotProps.data.imageError ? require('@/assets/images/default.jpeg') : getFullPathImage(slotProps.data.photos)"
                         @error="checkImageError(slotProps.index)"
@@ -64,7 +58,16 @@
                     </template>
                 </Column>
             </DataTable>
-            <Paginator v-if="!isFetching && data.products.length > 0" :rows="pagination.size" :totalRecords="pagination.length" @page="onPage($event)"></Paginator>
+            <div class="p-col-12" style="display: inline-block;">
+                <div class="p-ml-3" style="float: left;margin-top: 16px;">
+                    <span>Show records : </span>
+                    <Dropdown @change="changeLimit()" v-model="pagination.size" 
+                        :options="limits" 
+                        optionValue="val" 
+                        optionLabel="label" />
+                </div>
+                <Paginator v-if="!isFetching && data.products.length > 0" :rows="pagination.size" :totalRecords="pagination.length" @page="onPage($event)" style="float: right;"></Paginator>
+            </div>
 
             <!-- Dialog of Create Brand -->
             <Dialog :visible.sync="showCreateDialog" :style="{width: '450px'}" header="Create Brand" :modal="true"

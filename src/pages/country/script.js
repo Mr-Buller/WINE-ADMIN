@@ -40,6 +40,7 @@ export default {
 	},
 	methods: {
 		getCountry() {
+			this.isFetching = true
 			let keySearch = this.$route.query.search
 			let params = "?page="+this.pagination.page+"&size="+this.pagination.size
 			if(keySearch){ params = params+"&query="+keySearch }
